@@ -2,27 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="53eccc03-dee5-4d19-a304-71b831a02c45" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/PvPCore.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/webResources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plugin.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCUtil.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCWorld.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCore.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCoreListener.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/WorldHandler.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/BaseParameter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/CommandRegistry.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/Parameter.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/PvPCommand.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/PvPCoreCommand.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/SimpleParameter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -79,11 +60,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/WorldHandler.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+            <state>
+              <caret line="61" lean-forward="true" selection-start-line="61" selection-end-line="61" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="105">
+                <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -103,6 +96,11 @@
     </findStrings>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="ffsjkorn &lt;jkorn2324swagg@gmail.com&gt;" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -121,6 +119,7 @@
         <option value="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCore.php" />
         <option value="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCoreListener.php" />
         <option value="$PROJECT_DIR$/plugin.yml" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -152,6 +151,27 @@
               <item name="PvPCore" type="b2602c69:ProjectViewProjectNode" />
               <item name="PvPCore" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="PvPCore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PvPCore" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="jkorn" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="PvPCore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PvPCore" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="jkorn" type="462c0819:PsiDirectoryNode" />
+              <item name="pvpcore" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="PvPCore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PvPCore" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="jkorn" type="462c0819:PsiDirectoryNode" />
+              <item name="pvpcore" type="462c0819:PsiDirectoryNode" />
+              <item name="commands" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="PvPCore" type="b2602c69:ProjectViewProjectNode" />
@@ -204,12 +224,27 @@
       <workItem from="1554418279976" duration="11403000" />
       <workItem from="1554490252077" duration="103000" />
       <workItem from="1554490401947" duration="7890000" />
-      <workItem from="1554771652586" duration="859000" />
+      <workItem from="1554771652586" duration="1370000" />
     </task>
+    <task id="LOCAL-00001" summary="first commit">
+      <created>1554772746713</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1554772746713</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Updated README.md">
+      <created>1554773141506</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1554773141506</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20608000" />
+    <option name="totallyTimeSpent" value="21119000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="217" y="23" width="1028" height="713" extended-state="0" />
@@ -259,6 +294,11 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="first commit" />
+    <MESSAGE value="Updated README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated README.md" />
   </component>
   <component name="editorHistoryManager">
     <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/plugin/RegisteredListener.php">
@@ -357,14 +397,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/PvPCore.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="543">
@@ -384,8 +416,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/WorldHandler.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        <state>
+          <caret line="61" lean-forward="true" selection-start-line="61" selection-end-line="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="105">
+            <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
