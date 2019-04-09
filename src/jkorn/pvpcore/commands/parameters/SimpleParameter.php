@@ -8,7 +8,7 @@
 
 declare(strict_types = 1);
 
-namespace jkorn\pvpcore\commands;
+namespace jkorn\pvpcore\commands\parameters;
 
 
 class SimpleParameter implements Parameter
@@ -24,6 +24,12 @@ class SimpleParameter implements Parameter
 
     private $setHasExact;
 
+    /**
+     * SimpleParameter constructor.
+     * @param string $permission
+     * @param string $theName
+     * @param int $type
+     */
     public function __construct(string $permission, string $theName, int $type)
     {
         $this->name = $theName;
@@ -37,20 +43,35 @@ class SimpleParameter implements Parameter
         }
     }
 
+    /**
+     * @param bool $b
+     * @return SimpleParameter
+     */
     public function setOptional(bool $b) : SimpleParameter {
         $this->optional = $b;
         return $this;
     }
 
+    /**
+     * @param bool $b
+     * @return SimpleParameter
+     */
     public function setExactValues(bool $b) : SimpleParameter {
         $this->setHasExact = $b;
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function hasExactValues() : bool {
         return $this->setHasExact;
     }
 
+    /**
+     * @param string $str
+     * @return bool
+     */
     public function isExactValue(string $str) : bool {
         $val = $this->getExactValues();
         $result = false;
@@ -67,6 +88,9 @@ class SimpleParameter implements Parameter
         return $result;
     }
 
+    /**
+     * @return array|string
+     */
     private function getExactValues() {
         $str = $this->name;
         if(strpos($this->name, "|")){
@@ -75,20 +99,32 @@ class SimpleParameter implements Parameter
         return $str;
     }
 
+    /**
+     * @return int
+     */
     public function getParameterType() : int {
         return $this->paramType;
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * @return bool
+     */
     public function hasPermission(): bool
     {
         return !is_null($this->permission) or $this->permission !== Parameter::NO_PERMISSION;
     }
 
+    /**
+     * @return bool
+     */
     public function isOptional() : bool {
         return $this->optional;
     }

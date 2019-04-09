@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace jkorn\pvpcore;
+namespace jkorn\pvpcore\world;
 
+use jkorn\pvpcore\PvPCore;
 use pocketmine\level\Level;
 use pocketmine\utils\Config;
 use pocketmine\Server;
@@ -20,6 +21,9 @@ class WorldHandler
 
     private $config;
 
+    /**
+     * WorldHandler constructor.
+     */
     public function __construct()
     {
         $allWorlds = [];
@@ -63,10 +67,18 @@ class WorldHandler
         $this->config->save();
     }
 
+    /**
+     * @param Level $level
+     * @return PvPCWorld
+     */
     public function getWorldFromLevel(Level $level) : PvPCWorld {
         return $this->getWorld($level->getName());
     }
 
+    /**
+     * @param string $level
+     * @return PvPCWorld|null
+     */
     public function getWorld(string $level) {
         $result = null;
         $worlds = $this->getAllWorlds();
@@ -95,11 +107,18 @@ class WorldHandler
         }
         return $result;
     }
-    
+
+    /**
+     * @param string $level
+     * @return bool
+     */
     public function isWorld(string $level) : bool {
         return !is_null($this->getWorld($level));
     }
 
+    /**
+     * @param PvPCWorld $world
+     */
     public function addWorld(PvPCWorld $world) : void {
         $map = $world->toMap();
         $name = $world->getLevel()->getName();
@@ -109,10 +128,11 @@ class WorldHandler
             $this->config->set("worlds", $map);
             $this->config->save();
         }
-        /*$this->config->set("worlds.$name", $map);
-        $this->config->save();*/
     }
 
+    /**
+     * @return array
+     */
     private function getAllWorlds() : array {
         $worlds = array();
         if($this->config->exists("worlds") and is_array($this->config->get("worlds"))){
@@ -121,6 +141,9 @@ class WorldHandler
         return $worlds;
     }
 
+    /**
+     * @param PvPCWorld $world
+     */
     public function updateWorld(PvPCWorld $world) : void {
         $map = $world->toMap();
         $name = $world->getLevel()->getName();

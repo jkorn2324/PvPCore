@@ -16,7 +16,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\utils\CommandException;
 use pocketmine\Server;
 
-class PvPCoreCommand extends Command
+class BaseCommand extends Command
 {
 
     protected $parameters;

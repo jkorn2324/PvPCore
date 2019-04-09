@@ -8,7 +8,7 @@
 
 declare(strict_types = 1);
 
-namespace jkorn\pvpcore\commands;
+namespace jkorn\pvpcore\commands\parameters;
 
 
 interface Parameter
@@ -22,8 +22,14 @@ interface Parameter
 
     public const NO_PERMISSION = "none";
 
+    /**
+     * @return string
+     */
     function getName() : string;
 
+    /**
+     * @return bool
+     */
     function hasPermission() : bool;
 
 }

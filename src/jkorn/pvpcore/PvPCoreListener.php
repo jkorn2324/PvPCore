@@ -13,21 +13,24 @@ namespace jkorn\pvpcore;
 
 use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
-use pocketmine\level\Level;
-
-use jkorn\pvpcore\WorldHandler;
 
 class PvPCoreListener implements Listener
 {
     private $theCore;
 
+    /**
+     * PvPCoreListener constructor.
+     * @param PvPCore $core
+     */
     public function __construct(PvPCore $core)
     {
         $this->theCore = $core;
     }
 
+    /**
+     * @param EntityDamageByEntityEvent $event
+     */
     public function onEntityDamage(EntityDamageByEntityEvent $event) : void {
         $damager = $event->getDamager(); $damaged = $event->getEntity();
         if($damaged instanceof Player and $damager instanceof Player){
@@ -40,7 +43,6 @@ class PvPCoreListener implements Listener
                 if($useCustomKB){
                     $knockback = $world->getKnockBack();
                     $event->setAttackCooldown($time);
-                    //$event->setKnockBack($knockback);
                 }
                 $event->setKnockBack($knockback);
             }

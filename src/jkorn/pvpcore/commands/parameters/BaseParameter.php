@@ -8,7 +8,7 @@
 
 declare(strict_types = 1);
 
-namespace jkorn\pvpcore\commands;
+namespace jkorn\pvpcore\commands\parameters;
 
 
 class BaseParameter implements Parameter
@@ -20,6 +20,13 @@ class BaseParameter implements Parameter
     
     private $description;
 
+    /**
+     * BaseParameter constructor.
+     * @param string $n
+     * @param string $basePermission
+     * @param string $desc
+     * @param bool $hasPerm
+     */
     public function __construct(string $n, string $basePermission, string $desc, bool $hasPerm = true)
     {
         $this->name = $n;
@@ -39,10 +46,16 @@ class BaseParameter implements Parameter
         return $this->permission != null;
     }
 
+    /**
+     * @return |null
+     */
     public function getPermission() {
         return $this->permission;
     }
 
+    /**
+     * @return string
+     */
     public function getDescription() : string {
         return $this->description;
     }
