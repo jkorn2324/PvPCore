@@ -10,31 +10,42 @@ declare(strict_types = 1);
 
 namespace jkorn\pvpcore\commands;
 
+use jkorn\pvpcore\commands\parameters\BaseParameter;
+use jkorn\pvpcore\commands\parameters\Parameter;
+use jkorn\pvpcore\commands\parameters\SimpleParameter;
 use jkorn\pvpcore\PvPCore;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\utils\CommandException;
-use pocketmine\Server;
 
 class BaseCommand extends Command
 {
 
     protected $parameters;
-    
+
+    /**
+     * BaseCommand constructor.
+     * @param $name
+     * @param string $description
+     * @param null $usageMessage
+     */
     public function __construct($name, $description = "", $usageMessage = null)
     {
         parent::__construct($name, $description, $usageMessage);
         parent::setPermission("pvpcore.permission.$name");
         $this->parameters = array();
-        /*$this->parameters = array(
-            "default" => array()
-        );*/
     }
 
+    /**
+     * @param array $params
+     */
     public function setParameters(array $params) : void {
         $this->parameters = $params;
     }
 
+    /**
+     * @return bool
+     */
     private function areParametersCorrect() : bool {
         $result = true;
         if(is_array($this->parameters)){
@@ -44,30 +55,15 @@ class BaseCommand extends Command
                     $result = false;
                     break;
                 }
-                //printf($this->parameters[$v]);
             }
-            /*foreach(key($this->parameters) as $key){
-                if(!is_string($key) || !is_int($key)){
-                    $result = false;
-                    break;
-                } else {
-                    $value = $this->parameters[$key];
-                    if(!is_array($value)){
-                        $result = false;
-                        break;
-                    }
-                }
-            }*/
-            /*foreach($this->parameters as $val){
-                if(!is_array($val)){
-                    $result = false;
-                    break;
-                }
-            }*/
         }
         return $result;
     }
 
+    /**
+     * @param string $name
+     * @return mixed|null
+     */
     private function getParamGroupFrom(string $name){
         $paramGroup = null;
         foreach(array_keys($this->parameters) as $key){
@@ -89,10 +85,19 @@ class BaseCommand extends Command
         return $paramGroup;
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     private function hasParamGroup(string $name) : bool {
         return $this->getParamGroupFrom($name) != null;
     }
 
+    /**
+     * @param CommandSender $sender
+     * @param string $paramGroup
+     * @return bool
+     */
     protected function checkPermissions(CommandSender $sender, string $paramGroup) : bool {
         $result = false;
         if($this->hasParamGroup($paramGroup)) {
@@ -119,6 +124,11 @@ class BaseCommand extends Command
         return $result;
     }
 
+    /**
+     * @param array $args
+     * @param array $paramGroup
+     * @return bool
+     */
     protected function hasProperParamTypes(array $args, array $paramGroup) : bool {
 
         $count = 0;
@@ -151,6 +161,11 @@ class BaseCommand extends Command
         return $result;
     }
 
+    /**
+     * @param string $s
+     * @param SimpleParameter $param
+     * @return bool
+     */
     public function hasProperParamType(string $s, SimpleParameter $param) : bool {
 
         $result = false;
@@ -187,10 +202,18 @@ class BaseCommand extends Command
         return $result;
     }
 
+    /**
+     * @param string $boolean
+     * @return bool
+     */
     protected function isBoolean(string $boolean) : bool {
         return !is_null($this->getBoolean($boolean));
     }
 
+    /**
+     * @param SimpleParameter $param
+     * @return string
+     */
     protected function getParameterType(SimpleParameter $param) : string {
         $string = $param->getName();
         $result = $string;
@@ -218,6 +241,10 @@ class BaseCommand extends Command
         return $result;
     }
 
+    /**
+     * @param string $s
+     * @return bool|null
+     */
     protected function getBoolean(string $s) {
         $result = null;
         if($s === "enable" or $s === "on" or $s == "true"){
@@ -228,6 +255,11 @@ class BaseCommand extends Command
         return $result;
     }
 
+    /**
+     * @param array $args
+     * @param array $paramGroup
+     * @return bool
+     */
     protected function hasProperParamLen(array $args, array $paramGroup) : bool {
 
         $argsLen = count($args); $minLen = 0; $maxLen = 0;
@@ -304,6 +336,11 @@ class BaseCommand extends Command
         return parent::execute($sender, $label, $args);
     }
 
+    /**
+     * @param array $paramGrp
+     * @param bool $fullMsg
+     * @return String
+     */
     protected function getUsageOf(array $paramGrp, bool $fullMsg) : String {
         $theCommandName = parent::getName();
         $str = ($fullMsg ? " - /$theCommandName " : "Usage: /$theCommandName ");
@@ -337,6 +374,9 @@ class BaseCommand extends Command
         return $str;
     }
 
+    /**
+     * @return string
+     */
     protected function getFullUsage() : string {
 
         $array = array();
@@ -351,22 +391,6 @@ class BaseCommand extends Command
                 }
             }
         }
-
-        /*foreach(key($this->parameters) as $key){
-
-            if(is_string($key)){
-                array_push($array, $key);
-            } elseif (is_int($key)){
-                $arr = $this->parameters[$key];
-                if(is_array($arr) and count($arr) > 0){
-                    $first = $arr[0];
-                    if($first instanceof Parameter){
-                        $name = $first->getName();
-                        array_push($array, $name);
-                    }
-                }
-            }
-        }*/
 
         $result = "All the " . parent::getName() . " commands:\n";
         $count = 0;
