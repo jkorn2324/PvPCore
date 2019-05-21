@@ -47,7 +47,7 @@ class BaseParameter implements Parameter
     }
 
     /**
-     * @return |null
+     * @return string|null
      */
     public function getPermission() {
         return $this->permission;

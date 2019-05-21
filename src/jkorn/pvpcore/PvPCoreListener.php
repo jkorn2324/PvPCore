@@ -11,6 +11,8 @@ namespace jkorn\pvpcore;
  * Time: 16:06
  */
 
+use pocketmine\event\EventPriority;
+use pocketmine\event\HandlerList;
 use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\Player;
@@ -23,28 +25,47 @@ class PvPCoreListener implements Listener
      * PvPCoreListener constructor.
      * @param PvPCore $core
      */
-    public function __construct(PvPCore $core)
-    {
+    public function __construct(PvPCore $core) {
         $this->theCore = $core;
     }
 
     /**
      * @param EntityDamageByEntityEvent $event
+     * @priority LOW
+     * @ignoreCancelled FALSE
      */
     public function onEntityDamage(EntityDamageByEntityEvent $event) : void {
+
         $damager = $event->getDamager(); $damaged = $event->getEntity();
+
         if($damaged instanceof Player and $damager instanceof Player){
+
+            $damager = $damager->getPlayer();
+
+            $damaged = $damaged->getPlayer();
+
             $lvl = $damaged->getLevel();
             $world = PvPCore::getWorldHandler()->getWorldFromLevel($lvl);
+
             if(!is_null($world)){
+
                 $useCustomKB = $world->hasCustomKB();
                 $time = $world->getAttackDelayTime();
-                $knockback = $event->getKnockBack();
-                if($useCustomKB){
-                    $knockback = $world->getKnockBack();
+                $knockback = $world->getKnockBack();
+
+                if(PvPCore::getAreaHandler()->isInSameAreas($damaged, $damager)) {
+                    $closestArea = PvPCore::getAreaHandler()->getClosestAreaTo($damaged->getPlayer());
+                    if($closestArea->canUseAreaKB()) {
+                        $knockback = $closestArea->getKnockback();
+                        $time = $closestArea->getAttackDelay();
+                        $useCustomKB = $closestArea->canUseAreaKB();
+                    }
+                }
+
+                if($useCustomKB === true) {
+                    $event->setKnockBack($knockback);
                     $event->setAttackCooldown($time);
                 }
-                $event->setKnockBack($knockback);
             }
         }
     }

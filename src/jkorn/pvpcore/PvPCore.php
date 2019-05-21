@@ -11,12 +11,18 @@ namespace jkorn\pvpcore;
  * Time: 16:01
  */
 
+use jkorn\pvpcore\commands\AreaCommand;
 use jkorn\pvpcore\commands\PvPCommand;
+use jkorn\pvpcore\world\areas\AreaHandler;
+use jkorn\pvpcore\world\areas\PvPCArea;
+use jkorn\pvpcore\world\PvPCWorld;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\event\EventPriority;
 use pocketmine\plugin\PluginBase;
 use jkorn\pvpcore\world\WorldHandler;
 use pocketmine\Server;
+use pocketmine\utils\Config;
 
 class PvPCore extends PluginBase
 {
@@ -24,6 +30,8 @@ class PvPCore extends PluginBase
     private static $instance;
 
     private static $worldHandler;
+
+    private static $areaHandler;
 
     /**
      *
@@ -33,7 +41,9 @@ class PvPCore extends PluginBase
         parent::onEnable();
         self::$instance = $this;
         $this->initCommands();
-        self::$worldHandler = new WorldHandler();
+        $this->initConfig();
+        self::$worldHandler = new WorldHandler($this);
+        self::$areaHandler = new AreaHandler($this);
         self::getServer()->getPluginManager()->registerEvents(new PvPCoreListener($this), $this);
     }
 
@@ -49,6 +59,64 @@ class PvPCore extends PluginBase
      */
     public static function getWorldHandler() : WorldHandler {
         return self::$worldHandler;
+    }
+
+    /**
+     * @return AreaHandler
+     */
+    public static function getAreaHandler() : AreaHandler {
+        return self::$areaHandler;
+    }
+
+    private function initConfig() : void {
+
+        $levels = $this->getServer()->getLevels();
+
+        $allWorlds = [];
+
+        foreach($levels as $level) {
+            $name = $level->getName();
+            $defaultAttackDelay = 10;
+            $customKb = false;
+            $knockback = 0.4;
+            $world = new PvPCWorld($name, $customKb, $defaultAttackDelay, $knockback);
+            array_push($allWorlds, $world);
+        }
+
+        $file = $this->getDataFolder() . "/config.yml";
+        $config = new Config($file, Config::YAML, []);
+
+        $worldsKey = "worlds";
+        $areasKey = "areas";
+
+        if(!$config->exists($worldsKey)) {
+            $config->set($worldsKey, []);
+            $config->save();
+        }
+
+        if(!$config->exists($areasKey)) {
+            $config->set($areasKey, []);
+            $config->save();
+        }
+
+        $worlds = $config->get($worldsKey);
+
+        $edited = false;
+
+        foreach($allWorlds as $world) {
+            if($world instanceof PvPCWorld) {
+                $name = $world->getLevel()->getName();
+                if(!array_key_exists($name, $worlds)) {
+                    $worlds[$name] = $world->toMap();
+                    $edited = true;
+                }
+            }
+        }
+
+        if($edited === true) {
+            $config->set("$worldsKey", $worlds);
+            $config->save();
+        }
     }
 
     /**
@@ -103,6 +171,7 @@ class PvPCore extends PluginBase
      */
     private function initCommands(){
         $this->registerCommand("pvp", new PvPCommand());
+        $this->registerCommand("pvparea", new AreaCommand());
     }
 
     /**

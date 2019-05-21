@@ -99,13 +99,15 @@ class PvPCommand extends BaseCommand
 
             $world = PvPCore::getWorldHandler()->getWorld($level);
 
-            $str = ($enable ? TextFormat::GREEN . "enabled" . TextFormat::RESET : TextFormat::RED . "disabled" . TextFormat::RESET);
+            $format = ($enable === true) ? TextFormat::GREEN : TextFormat::RED;
+
+            $enabled = ($enable === true) ? "enabled" : "disabled";
 
             $world = $world->setHasCustomKB($enable);
 
             PvPCore::getWorldHandler()->updateWorld($world);
 
-            $msg = TextFormat::GRAY . "Custom Knockback has been successfully " . $str . TextFormat::GRAY . "!";
+            $msg = $format . "Custom Knockback has been successfully " . $enabled . "!";
 
         } else $msg = TextFormat::RED . "Level '$level' does not exist!";
 
@@ -152,11 +154,11 @@ class PvPCommand extends BaseCommand
                 }
             }
 
-            if ($hasUpdated) {
+            if ($hasUpdated === true) {
                 PvPCore::getWorldHandler()->updateWorld($world);
-                $msg = TextFormat::GREEN . $level . TextFormat::GRAY . " has been successfully updated!";
+                $msg = TextFormat::GREEN . $level . " has been successfully updated!";
             } else {
-                $msg = TextFormat::RED . $level . TextFormat::GRAY . " failed to update!";
+                $msg = TextFormat::RED . " failed to update!";
             }
 
         } else $msg = TextFormat::RED . "Level '$level' does not exist!";

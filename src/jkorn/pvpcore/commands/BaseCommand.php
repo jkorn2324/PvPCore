@@ -49,7 +49,8 @@ class BaseCommand extends Command
     private function areParametersCorrect() : bool {
         $result = true;
         if(is_array($this->parameters)){
-            for($v = 0; $v < count($this->parameters); $v++){
+            $size = count($this->parameters);
+            for($v = 0; $v < $size; $v++){
                 $group = $this->parameters[$v];
                 if(!is_array($group)){
                     $result = false;
@@ -66,7 +67,8 @@ class BaseCommand extends Command
      */
     private function getParamGroupFrom(string $name){
         $paramGroup = null;
-        foreach(array_keys($this->parameters) as $key){
+        $keys = array_keys($this->parameters);
+        foreach($keys as $key){
             if(is_int($key) and is_array($this->parameters[$key])){
                 $arr = $this->parameters[$key];
                 foreach($arr as $parameter){
@@ -381,7 +383,9 @@ class BaseCommand extends Command
 
         $array = array();
 
-        for($i = 0; $i < count($this->parameters); $i++){
+        $size = count($this->parameters);
+
+        for($i = 0; $i < $size; $i++){
             $arr = $this->parameters[$i];
             if(is_array($arr) and count($arr) > 0){
                 $first = $arr[0];

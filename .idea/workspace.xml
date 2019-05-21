@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="53eccc03-dee5-4d19-a304-71b831a02c45" name="Default Changelist" comment="">
+    <list default="true" id="53eccc03-dee5-4d19-a304-71b831a02c45" name="Default Changelist" comment="Added pvpareas to make it consistent with the nukkit pvpcore.">
+      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/AreaCommand.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/world/areas/AreaHandler.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/world/areas/PvPCArea.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCore.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCore.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCoreListener.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCoreListener.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/BaseCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/BaseCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/PvPCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/PvPCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/parameters/BaseParameter.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/commands/parameters/BaseParameter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jkorn/pvpcore/world/WorldHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/jkorn/pvpcore/world/WorldHandler.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,8 +39,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/PvPCore.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="262">
-              <caret line="93" column="26" lean-forward="true" selection-start-line="93" selection-start-column="26" selection-end-line="93" selection-end-column="26" />
+            <state relative-caret-position="736">
+              <caret line="46" column="56" selection-start-line="46" selection-start-column="56" selection-end-line="46" selection-end-column="56" />
               <folding>
                 <element signature="e#146#185#0#PHP" expanded="true" />
               </folding>
@@ -39,14 +48,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/BaseCommand.php">
+      <file pinned="false" current-in-tab="false">
+        <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/plugin/PluginManager.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="28" column="33" lean-forward="true" selection-start-line="28" selection-start-column="33" selection-end-line="28" selection-end-column="33" />
-              <folding>
-                <element signature="e#156#208#0#PHP" expanded="true" />
-              </folding>
+            <state relative-caret-position="11184">
+              <caret line="753" column="50" selection-start-line="753" selection-start-column="50" selection-end-line="753" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -54,8 +60,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/PvPCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="69" column="26" selection-start-line="69" selection-start-column="26" selection-end-line="69" selection-end-column="26" />
+            <state relative-caret-position="688">
+              <caret line="48" column="33" selection-start-line="48" selection-start-column="33" selection-end-line="48" selection-end-column="33" />
               <folding>
                 <element signature="e#129#177#0#PHP" expanded="true" />
               </folding>
@@ -64,13 +70,76 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="105">
-                <caret line="7" column="32" lean-forward="true" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
-              </first_editor>
-              <second_editor />
+        <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/AreaCommand.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1472">
+              <caret line="97" column="28" selection-start-line="97" selection-start-column="28" selection-end-line="97" selection-end-column="28" />
+              <folding>
+                <element signature="e#129#181#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/plugin.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="28">
+              <caret line="5" column="61" selection-start-line="5" selection-start-column="61" selection-end-line="5" selection-end-column="61" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/PvPCoreListener.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="509">
+              <caret line="69" column="8" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="8" />
+              <folding>
+                <element signature="e#146#181#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/event/entity/EntityDamageEvent.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="208">
+              <caret line="32" column="40" selection-start-line="32" selection-start-column="40" selection-end-line="32" selection-end-column="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/event/entity/EntityEvent.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="208">
+              <caret line="31" column="38" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/world/areas/AreaHandler.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="207" lean-forward="true" selection-start-line="207" selection-end-line="207" />
+              <folding>
+                <element signature="e#132#158#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/world/areas/PvPCArea.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="440">
+              <caret line="69" column="20" selection-start-line="69" selection-start-column="20" selection-end-line="69" selection-end-column="20" />
+              <folding>
+                <element signature="e#158#185#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -87,6 +156,10 @@
       <find>setMotion</find>
       <find>$gravity</find>
       <find>attack</find>
+      <find>config</find>
+      <find>permission</find>
+      <find>textFormat</find>
+      <find>priority</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -108,20 +181,24 @@
         <option value="$PROJECT_DIR$/src/pvpcore/WorldHandler.php" />
         <option value="$PROJECT_DIR$/src/pvpcore/PvPCWorld.php" />
         <option value="$PROJECT_DIR$/src/pvpcore/Main.php" />
-        <option value="$PROJECT_DIR$/plugin.yml" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/jkorn/pvpcore/WorldHandler.php" />
         <option value="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCWorld.php" />
         <option value="$PROJECT_DIR$/src/jkorn/pvpcore/commands/CommandRegistry.php" />
         <option value="$PROJECT_DIR$/src/jkorn/pvpcore/world/PvPCWorld.php" />
-        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCoreListener.php" />
-        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/commands/PvPCommand.php" />
-        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/world/WorldHandler.php" />
-        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/commands/parameters/BaseParameter.php" />
         <option value="$PROJECT_DIR$/src/jkorn/pvpcore/commands/parameters/Parameter.php" />
         <option value="$PROJECT_DIR$/src/jkorn/pvpcore/commands/parameters/SimpleParameter.php" />
-        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCore.php" />
+        <option value="$PROJECT_DIR$/index.php" />
+        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/commands/parameters/BaseParameter.php" />
+        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/world/WorldHandler.php" />
+        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/world/areas/PvPCArea.php" />
         <option value="$PROJECT_DIR$/src/jkorn/pvpcore/commands/BaseCommand.php" />
+        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/commands/AreaCommand.php" />
+        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/commands/PvPCommand.php" />
+        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCore.php" />
+        <option value="$PROJECT_DIR$/plugin.yml" />
+        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/world/areas/AreaHandler.php" />
+        <option value="$PROJECT_DIR$/src/jkorn/pvpcore/PvPCoreListener.php" />
       </list>
     </option>
   </component>
@@ -131,7 +208,7 @@
     </include_path>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="251" />
+    <option name="x" value="92" />
     <option name="y" value="23" />
     <option name="width" value="1028" />
     <option name="height" value="713" />
@@ -142,6 +219,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -177,13 +255,38 @@
             </path>
             <path>
               <item name="PvPCore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PvPCore" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="jkorn" type="462c0819:PsiDirectoryNode" />
+              <item name="pvpcore" type="462c0819:PsiDirectoryNode" />
+              <item name="commands" type="462c0819:PsiDirectoryNode" />
+              <item name="parameters" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="PvPCore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PvPCore" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="jkorn" type="462c0819:PsiDirectoryNode" />
+              <item name="pvpcore" type="462c0819:PsiDirectoryNode" />
+              <item name="world" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="PvPCore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PvPCore" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="jkorn" type="462c0819:PsiDirectoryNode" />
+              <item name="pvpcore" type="462c0819:PsiDirectoryNode" />
+              <item name="world" type="462c0819:PsiDirectoryNode" />
+              <item name="areas" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="PvPCore" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="bcb0276e:PhpExternalLibrariesNodePatcher$PatchedExternalLibrariesNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -228,7 +331,12 @@
       <workItem from="1554418279976" duration="11403000" />
       <workItem from="1554490252077" duration="103000" />
       <workItem from="1554490401947" duration="7890000" />
-      <workItem from="1554771652586" duration="4966000" />
+      <workItem from="1554771652586" duration="5130000" />
+      <workItem from="1558322117460" duration="6344000" />
+      <workItem from="1558333708825" duration="1551000" />
+      <workItem from="1558398311973" duration="3487000" />
+      <workItem from="1558410514353" duration="1595000" />
+      <workItem from="1558414480473" duration="202000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <created>1554772746713</created>
@@ -265,17 +373,24 @@
       <option name="project" value="LOCAL" />
       <updated>1554846206904</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Cleaned up code">
+      <created>1554846585739</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1554846585739</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24715000" />
+    <option name="totallyTimeSpent" value="38058000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="251" y="23" width="1028" height="713" extended-state="0" />
+    <frame x="92" y="23" width="1028" height="713" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27484787" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.30223125" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -296,7 +411,7 @@
       <window_info anchor="right" id="Database" order="3" weight="0.3296146" />
     </layout>
     <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26977688" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.29006085" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -314,7 +429,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" visible="true" weight="0.3296146" />
+      <window_info anchor="right" id="Database" order="3" weight="0.3296146" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -335,13 +450,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pvpcore/NoDamagePlayer.php" />
-    <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/plugin/PluginManager.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="107">
-          <caret line="680" column="48" lean-forward="true" selection-start-line="680" selection-start-column="48" selection-end-line="680" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pvpcore/NoDamageTask.php" />
     <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/standard/standard_8.php">
       <provider selected="true" editor-type-id="text-editor">
@@ -361,13 +469,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="35" column="29" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/plugin/PluginBase.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3990">
-          <caret line="303" lean-forward="true" selection-start-line="303" selection-end-line="303" />
         </state>
       </provider>
     </entry>
@@ -406,23 +507,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/plugin.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="61" lean-forward="true" selection-start-line="5" selection-start-column="61" selection-end-line="5" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="105">
-            <caret line="7" column="32" lean-forward="true" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/event/server/DataPacketReceiveEvent.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -430,48 +514,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/PvPCUtil.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="15" column="1" lean-forward="true" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/CommandRegistry.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="469">
-          <caret line="38" column="5" lean-forward="true" selection-start-line="38" selection-start-column="5" selection-end-line="38" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/world/PvPCWorld.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1046">
-          <caret line="4" column="29" selection-start-line="4" selection-start-column="29" selection-end-line="4" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/parameters/BaseParameter.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-13">
-          <caret line="32" column="30" selection-start-line="32" selection-start-column="30" selection-end-line="32" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/PvPCUtil.php" />
+    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/CommandRegistry.php" />
     <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/parameters/Parameter.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="13" column="16" selection-start-line="13" selection-start-column="16" selection-end-line="13" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/PvPCoreListener.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-11">
-          <caret line="17" column="41" lean-forward="true" selection-start-line="17" selection-start-column="41" selection-end-line="17" selection-end-column="41" />
-          <folding>
-            <element signature="e#146#176#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -482,42 +530,183 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="112">
+            <caret line="7" column="32" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/world/PvPCWorld.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1154">
+          <caret line="4" column="29" selection-start-line="4" selection-start-column="29" selection-end-line="4" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="4" column="25" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/item/StringItem.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="28" column="6" selection-start-line="28" selection-start-column="6" selection-end-line="28" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/standard/standard_3.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="109" column="9" selection-start-line="109" selection-start-column="9" selection-end-line="109" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/plugin/PluginBase.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2143">
+          <caret line="257" column="20" selection-start-line="257" selection-start-column="20" selection-end-line="257" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/world/WorldHandler.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-113">
-          <caret line="39" column="23" selection-start-line="39" selection-start-column="23" selection-end-line="39" selection-end-column="23" />
+        <state relative-caret-position="416">
+          <caret line="26" column="19" selection-start-line="26" selection-start-column="19" selection-end-line="26" selection-end-column="19" />
           <folding>
             <element signature="e#65#91#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/PvPCommand.php">
+    <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/vendor/pocketmine/math/src/Vector3.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="69" column="26" selection-start-line="69" selection-start-column="26" selection-end-line="69" selection-end-column="26" />
+        <state relative-caret-position="5904">
+          <caret line="392" column="20" selection-start-line="392" selection-start-column="20" selection-end-line="392" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/command/Command.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-10">
+          <caret line="104" column="5" lean-forward="true" selection-start-line="104" selection-start-column="5" selection-end-line="104" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/BaseCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6112">
+          <caret line="387" column="30" selection-start-line="387" selection-start-column="30" selection-end-line="387" selection-end-column="30" />
           <folding>
-            <element signature="e#129#177#0#PHP" expanded="true" />
+            <element signature="e#156#208#0#PHP" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/parameters/BaseParameter.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/event/Event.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="94" column="33" selection-start-line="94" selection-start-column="25" selection-end-line="94" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/PvPCore.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="93" column="26" lean-forward="true" selection-start-line="93" selection-start-column="26" selection-end-line="93" selection-end-column="26" />
+        <state relative-caret-position="736">
+          <caret line="46" column="56" selection-start-line="46" selection-start-column="56" selection-end-line="46" selection-end-column="56" />
           <folding>
             <element signature="e#146#185#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/BaseCommand.php">
+    <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/plugin/PluginManager.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="28" column="33" lean-forward="true" selection-start-line="28" selection-start-column="33" selection-end-line="28" selection-end-column="33" />
+        <state relative-caret-position="11184">
+          <caret line="753" column="50" selection-start-line="753" selection-start-column="50" selection-end-line="753" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/PvPCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="688">
+          <caret line="48" column="33" selection-start-line="48" selection-start-column="33" selection-end-line="48" selection-end-column="33" />
           <folding>
-            <element signature="e#156#208#0#PHP" expanded="true" />
+            <element signature="e#129#177#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/commands/AreaCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1472">
+          <caret line="97" column="28" selection-start-line="97" selection-start-column="28" selection-end-line="97" selection-end-column="28" />
+          <folding>
+            <element signature="e#129#181#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/event/entity/EntityDamageEvent.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="32" column="40" selection-start-line="32" selection-start-column="40" selection-end-line="32" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="phar://$PROJECT_DIR$/../../Servers:Plugins/PocketMine/1.10/PocketMine-MP/PocketMine-MP 1.10.phar/src/pocketmine/event/entity/EntityEvent.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="31" column="38" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/plugin.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="28">
+          <caret line="5" column="61" selection-start-line="5" selection-start-column="61" selection-end-line="5" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/world/areas/PvPCArea.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="69" column="20" selection-start-line="69" selection-start-column="20" selection-end-line="69" selection-end-column="20" />
+          <folding>
+            <element signature="e#158#185#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/world/areas/AreaHandler.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="207" lean-forward="true" selection-start-line="207" selection-end-line="207" />
+          <folding>
+            <element signature="e#132#158#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jkorn/pvpcore/PvPCoreListener.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="509">
+          <caret line="69" column="8" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="8" />
+          <folding>
+            <element signature="e#146#181#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>

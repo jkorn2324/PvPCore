@@ -19,16 +19,21 @@ use pocketmine\Server;
 class WorldHandler
 {
 
+    /* @var Config */
     private $config;
 
     /**
      * WorldHandler constructor.
+     * @param PvPCore $core
      */
-    public function __construct()
+    public function __construct(PvPCore $core)
     {
-        $allWorlds = [];
+        $this->config = $core->getConfig();
+        /*$allWorlds = [];
 
-        foreach(Server::getInstance()->getLevels() as $level){
+        $levels = Server::getInstance()->getLevels();
+
+        foreach($levels as $level){
             $name = $level->getName();
             $defaultAttackDelay = 10;
             $customKb = false;
@@ -49,22 +54,26 @@ class WorldHandler
         $edited = false;
 
         if(is_array($worlds)){
-            for($i = 0; $i < count($allWorlds); $i += 1){
+
+            $size = count($allWorlds);
+
+            for($i = 0; $i < $size; $i++){
                 $world = $allWorlds[$i];
                 if($world instanceof PvPCWorld) {
                     $theName = $world->getLevel()->getName();
                     if(!array_key_exists($theName, $worlds)) {
                         $worlds[$theName] = $world->toMap();
-                        //array_push($worlds, $theName, $world->toMap());
                         $edited = true;
                     }
                 }
             }
         }
 
-        if($edited) $this->config->set("$worldsKey", $worlds);
+        if($edited === true)
+            $this->config->set("$worldsKey", $worlds);
 
-        $this->config->save();
+
+        $this->config->save();*/
     }
 
     /**
@@ -125,7 +134,7 @@ class WorldHandler
         $worlds = $this->config->get("worlds");
         if(is_array($worlds) and !key_exists($name, $worlds)){
             $worlds[$name] = $map;
-            $this->config->set("worlds", $map);
+            $this->config->set("worlds", $worlds);
             $this->config->save();
         }
     }
@@ -135,9 +144,10 @@ class WorldHandler
      */
     private function getAllWorlds() : array {
         $worlds = array();
-        if($this->config->exists("worlds") and is_array($this->config->get("worlds"))){
+
+        if($this->config->exists("worlds") and is_array($this->config->get("worlds")))
             $worlds = $this->config->get("worlds");
-        }
+
         return $worlds;
     }
 
