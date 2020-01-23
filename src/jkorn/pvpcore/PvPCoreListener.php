@@ -11,8 +11,7 @@ namespace jkorn\pvpcore;
  * Time: 16:06
  */
 
-use pocketmine\event\EventPriority;
-use pocketmine\event\HandlerList;
+use jkorn\pvpcore\world\PvPCWorld;
 use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\Player;
@@ -47,7 +46,7 @@ class PvPCoreListener implements Listener
             $lvl = $damaged->getLevel();
             $world = PvPCore::getWorldHandler()->getWorldFromLevel($lvl);
 
-            if(!is_null($world)){
+            if($world !== null and $world instanceof PvPCWorld){
 
                 $useCustomKB = $world->hasCustomKB();
                 $time = $world->getAttackDelayTime();

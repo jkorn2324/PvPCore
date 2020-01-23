@@ -82,7 +82,9 @@ class PvPCommand extends BaseCommand
                 default:
             }
         }
-        if (!is_null($msg)) $sender->sendMessage($msg);
+        if ($msg !== null) {
+            $sender->sendMessage($msg);
+        }
         return true;
     }
 
@@ -95,23 +97,30 @@ class PvPCommand extends BaseCommand
     {
         $msg = null;
 
-        if (PvPCore::getWorldHandler()->isWorld($level)) {
+        $worldManager = PvPCore::getWorldHandler();
+
+        if ($worldManager->isWorld($level)) {
 
             $world = PvPCore::getWorldHandler()->getWorld($level);
 
-            $format = ($enable === true) ? TextFormat::GREEN : TextFormat::RED;
+            $format = $enable ? TextFormat::GREEN : TextFormat::RED;
 
-            $enabled = ($enable === true) ? "enabled" : "disabled";
+            $enabled = $enable ? "enabled" : "disabled";
 
             $world = $world->setHasCustomKB($enable);
 
-            PvPCore::getWorldHandler()->updateWorld($world);
+            $worldManager->updateWorld($world);
 
             $msg = $format . "Custom Knockback has been successfully " . $enabled . "!";
 
-        } else $msg = TextFormat::RED . "Level '$level' does not exist!";
+        } else {
+            $msg = TextFormat::RED . "Level '$level' does not exist!";
+        }
 
-        if (!is_null($msg)) $sender->sendMessage($msg);
+        if ($msg !== null) {
+
+            $sender->sendMessage($msg);
+        }
     }
 
     /**
@@ -124,16 +133,20 @@ class PvPCommand extends BaseCommand
     {
         $msg = null;
 
-        if (PvPCore::getWorldHandler()->isWorld($level)) {
+        $worldManager = PvPCore::getWorldHandler();
+
+        if ($worldManager->isWorld($level)) {
 
             $hasUpdated = false;
             $updatedVal = "None";
 
             switch ($setting) {
+                case "kb":
                 case "knockback":
                     $updatedVal = "knockback";
                     $value = floatval($value);
                     break;
+                case "delay":
                 case "attackdelay":
                     $updatedVal = "attack-delay";
                     $value = intval($value);
@@ -141,28 +154,32 @@ class PvPCommand extends BaseCommand
                 default:
             }
 
-            $world = PvPCore::getWorldHandler()->getWorld($level);
+            $world = $worldManager->getWorld($level);
 
             if ($updatedVal !== "None") {
-                if ($updatedVal === "attack-delay" and is_int($value)) {
+
+                if ($updatedVal === "attack-delay" and PvPCore::canParse($value, true)) {
                     $world = $world->setAttackDelayTime($value);
                     $hasUpdated = true;
                 }
-                if ($updatedVal === "knockback" and is_float($value)) {
+                if ($updatedVal === "knockback" and PvPCore::canParse($value, false)) {
                     $world = $world->setKB($value);
                     $hasUpdated = true;
                 }
             }
 
             if ($hasUpdated === true) {
-                PvPCore::getWorldHandler()->updateWorld($world);
-                $msg = TextFormat::GREEN . $level . " has been successfully updated!";
+                $worldManager->updateWorld($world);
+                $msg = TextFormat::GREEN . "The level '{$level}' has been successfully updated!";
             } else {
-                $msg = TextFormat::RED . " failed to update!";
+                $msg = TextFormat::RED . "The level '{$level}' failed to update!";
             }
 
-        } else $msg = TextFormat::RED . "Level '$level' does not exist!";
+        } else $msg = TextFormat::RED . "Level '{$level}' does not exist!";
 
-        if(!is_null($msg)) $sender->sendMessage($msg);
+        if($msg !== null){
+            $sender->sendMessage($msg);
+        }
+
     }
 }

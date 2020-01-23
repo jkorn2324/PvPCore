@@ -13,11 +13,13 @@ namespace jkorn\pvpcore\commands\parameters;
 
 class BaseParameter implements Parameter
 {
-    
+    /** @var null|string */
     private $permission;
 
+    /** @var string */
     private $name;
-    
+
+    /** @var string */
     private $description;
 
     /**
@@ -32,7 +34,7 @@ class BaseParameter implements Parameter
         $this->name = $n;
         $this->description = $desc;
         if($hasPerm and $basePermission !== Parameter::NO_PERMISSION){
-            $this->permission = "$basePermission." . $this->getName();
+            $this->permission = "{$basePermission}." . $this->getName();
         } else {
             $this->permission = null;
         }

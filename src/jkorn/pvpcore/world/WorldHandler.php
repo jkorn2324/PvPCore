@@ -7,7 +7,6 @@ namespace jkorn\pvpcore\world;
 use jkorn\pvpcore\PvPCore;
 use pocketmine\level\Level;
 use pocketmine\utils\Config;
-use pocketmine\Server;
 
 /**
  * Created by PhpStorm.
@@ -29,51 +28,6 @@ class WorldHandler
     public function __construct(PvPCore $core)
     {
         $this->config = $core->getConfig();
-        /*$allWorlds = [];
-
-        $levels = Server::getInstance()->getLevels();
-
-        foreach($levels as $level){
-            $name = $level->getName();
-            $defaultAttackDelay = 10;
-            $customKb = false;
-            $knockback = 0.4;
-            $world = new PvPCWorld($name, $customKb, $defaultAttackDelay, $knockback);
-            array_push($allWorlds, $world);
-        }
-
-        $path = PvPCore::getInstance()->getDataFolder() . "/config.yml";
-        $this->config = new Config($path, Config::YAML, array());
-
-        $worldsKey = "worlds";
-
-        if(!$this->config->exists("$worldsKey")) $this->config->set("$worldsKey", array());
-
-        $worlds = $this->config->get("$worldsKey");
-
-        $edited = false;
-
-        if(is_array($worlds)){
-
-            $size = count($allWorlds);
-
-            for($i = 0; $i < $size; $i++){
-                $world = $allWorlds[$i];
-                if($world instanceof PvPCWorld) {
-                    $theName = $world->getLevel()->getName();
-                    if(!array_key_exists($theName, $worlds)) {
-                        $worlds[$theName] = $world->toMap();
-                        $edited = true;
-                    }
-                }
-            }
-        }
-
-        if($edited === true)
-            $this->config->set("$worldsKey", $worlds);
-
-
-        $this->config->save();*/
     }
 
     /**

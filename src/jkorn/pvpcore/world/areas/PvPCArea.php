@@ -19,18 +19,25 @@ use pocketmine\Server;
 class PvPCArea
 {
 
+    /** @var Position */
     private $firstPos;
 
+    /** @var Position */
     private $secondPos;
 
+    /** @var string */
     private $name;
 
+    /** @var float */
     private $knockback;
 
+    /** @var int */
     private $attackDelay;
 
+    /** @var bool */
     private $enabled;
 
+    /** @var string */
     private $level;
 
     public function __construct(string $name, Level $level, Position $firstPos, Position $secondPos, float $kb = 0.4, int $attackDelay = 10, bool $enabled = true)
@@ -45,40 +52,81 @@ class PvPCArea
 
     }
 
+    /**
+     * @param Position $pos
+     * @param bool $pos2
+     * @return PvPCArea
+     *
+     * Sets the position.
+     */
     public function setPosition(Position $pos, bool $pos2) : self {
-        if($pos2 === true)
+
+        if($pos2) {
             $this->secondPos = $pos;
-        else $this->firstPos = $pos;
+        } else {
+            $this->firstPos = $pos;
+        }
         return $this;
     }
 
+    /**
+     * @param bool $result
+     * @return PvPCArea
+     *
+     * Sets the enable.
+     */
     public function setEnabled(bool $result) : self {
         $this->enabled = $result;
         return $this;
     }
 
+    /**
+     * @param int $del
+     * @return PvPCArea
+     *
+     * Set the attack delay.
+     */
     public function setAttackDel(int $del) : self {
         $this->attackDelay = $del;
         return $this;
     }
 
+    /**
+     * @param float $kb
+     * @return PvPCArea
+     */
     public function setKB(float $kb) : self {
         $this->knockback = $kb;
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function canUseAreaKB() : bool {
-        return $this->enabled === true;
+        return $this->enabled;
     }
 
+    /**
+     * @return int
+     */
     public function getAttackDelay() : int {
         return $this->attackDelay;
     }
 
+    /**
+     * @return float
+     */
     public function getKnockback() : float {
         return $this->knockback;
     }
 
+    /**
+     * @param Player $player
+     * @return bool
+     *
+     * Is the within the bounds of the area.
+     */
     public function isWithinBounds(Player $player) : bool {
 
         $position = $player->asPosition();
@@ -102,14 +150,28 @@ class PvPCArea
         return $result;
     }
 
+    /**
+     * @return string
+     *
+     * Sets the name.
+     */
     public function getName() : string {
         return $this->name;
     }
 
+    /**
+     * @return Level|null
+     */
     public function getLevel() : Level {
         return Server::getInstance()->getLevelByName($this->level);
     }
 
+    /**
+     * @param int $val
+     * @param int $minVal
+     * @param int $maxVal
+     * @return bool
+     */
     private function within(int $val, int $minVal, int $maxVal) : bool {
         return $val >= $minVal and $val <= $maxVal;
     }
@@ -146,10 +208,23 @@ class PvPCArea
         return ["min-x" => $minX, "max-x" => $maxX, "min-y" => $minY, "max-y" => $maxY, "min-z" => $minZ, "max-z" => $maxZ];
     }
 
+    /**
+     * @param Position $pos
+     * @return array
+     *
+     * Changes the position to an array object.
+     */
     private function posToArr(Position $pos) : array {
-        return ["x" => $pos->x, "y" => $pos->y, "z" => $pos->z];
+        return [
+            "x" => $pos->x,
+            "y" => $pos->y,
+            "z" => $pos->z
+        ];
     }
 
+    /**
+     * @return array
+     */
     public function toMap() : array {
 
         $arr = [
@@ -164,6 +239,12 @@ class PvPCArea
         return $arr;
     }
 
+    /**
+     * @param $object
+     * @return bool
+     *
+     * Determines if the pvp area is equal to another.
+     */
     public function equals($object) : bool{
 
         $result = false;

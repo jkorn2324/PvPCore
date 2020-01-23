@@ -118,6 +118,12 @@ class AreaCommand extends BaseCommand
         return true;
     }
 
+    /**
+     * @param CommandSender $sender
+     * @param string $name
+     *
+     * Creates a PvP Area.
+     */
     private function createPvPArea(CommandSender $sender, string $name) : void {
 
         $msg = null;
@@ -129,70 +135,129 @@ class AreaCommand extends BaseCommand
 
         } else $msg = TextFormat::RED . "Console can't use this command.";
 
-        if(!is_null($msg)) $sender->sendMessage($msg);
+        if($msg !== null) {
+            $sender->sendMessage($msg);
+        }
     }
 
+    /**
+     * @param CommandSender $sender
+     * @param string $name
+     *
+     * Deletes a PvP Area.
+     */
     private function deletePvPArea(CommandSender $sender, string $name) : void {
 
         $msg = null;
 
-        if(PvPCore::getAreaHandler()->doesAreaExist($name)) {
-            PvPCore::getAreaHandler()->deleteArea($name);
-            $msg = TextFormat::GREEN . "Successfully deleted PvPArea '$name'!";
-        } else $msg = TextFormat::RED . "PvPArea called '$name' does not exist.";
+        $areaManager = PvPCore::getAreaHandler();
 
-        if(!is_null($msg)) $sender->sendMessage($msg);
+        if($areaManager->doesAreaExist($name)) {
+            $areaManager->deleteArea($name);
+            $msg = TextFormat::GREEN . "Successfully deleted PvPArea '$name'!";
+        } else {
+            $msg = TextFormat::RED . "PvPArea called '$name' does not exist.";
+        }
+
+        if($msg !== null) {
+            $sender->sendMessage($msg);
+        }
 
     }
 
+    /**
+     * @param CommandSender $sender
+     * @param string $name
+     * @param bool $pos2
+     *
+     * Sets the position.
+     */
     private function setPosition(CommandSender $sender, string $name, bool $pos2) : void {
 
         $msg = null;
 
         if($sender instanceof Player) {
-            if(PvPCore::getAreaHandler()->doesAreaExist($name)) {
+            $areaManager = PvPCore::getAreaHandler();
+            if($areaManager->doesAreaExist($name)) {
                 $area = PvPCore::getAreaHandler()->getArea($name);
                 $area = $area->setPosition($sender->asPosition(), $pos2);
-                PvPCore::getAreaHandler()->updateArea($name, $area);
+                $areaManager->updateArea($name, $area);
                 $msg = TextFormat::GREEN . "The PvPArea called '$name' has been successfully updated.";
-            } else $msg = TextFormat::RED . "PvPArea called '$name' does not exist.";
-        } else $msg = TextFormat::RED . "Console can't use this command.";
+            } else {
+                $msg = TextFormat::RED . "PvPArea called '$name' does not exist.";
+            }
+        } else {
+            $msg = TextFormat::RED . "Console can't use this command.";
+        }
 
-        if(!is_null($msg)) $sender->sendMessage($msg);
+        if($msg !== null) {
+            $sender->sendMessage($msg);
+        }
     }
 
+    /**
+     * @param CommandSender $sender
+     * @param string $name
+     * @param bool $enable
+     *
+     * Enables the pvp area.
+     */
     private function enableArea(CommandSender $sender, string $name, bool $enable = true) : void {
 
         $msg = null;
 
-        if(PvPCore::getAreaHandler()->doesAreaExist($name)) {
-            $area = PvPCore::getAreaHandler()->getArea($name);
+        $areaManager = PvPCore::getAreaHandler();
+
+        if($areaManager->doesAreaExist($name)) {
+            $area = $areaManager->getArea($name);
             $area = $area->setEnabled($enable);
             $enableVal = ($enable === true) ? "enabled" : "disabled";
             $format = ($enable === true) ? TextFormat::GREEN : TextFormat::RED;
             $msg = $format . "The PvPArea '$name' has been $enableVal!";
-            PvPCore::getAreaHandler()->updateArea($name, $area);
+            $areaManager->updateArea($name, $area);
         } else $msg = TextFormat::RED . "PvPArea called '$name' does not exist.";
 
-        if(!is_null($msg)) $sender->sendMessage($msg);
+        if($msg !== null){
+            $sender->sendMessage($msg);
+        }
 
     }
 
+    /**
+     * @param CommandSender $sender
+     * @param string $name
+     * @param int $attackDel
+     *
+     * Attack delay.
+     */
     private function setAttackDelay(CommandSender $sender, string $name, int $attackDel) : void {
 
         $msg = null;
 
-        if(PvPCore::getAreaHandler()->doesAreaExist($name)) {
+        $areaManager = PvPCore::getAreaHandler();
+
+        if($areaManager->doesAreaExist($name)) {
 
             $area = PvPCore::getAreaHandler()->getArea($name);
             $area = $area->setAttackDel(abs($attackDel));
-            PvPCore::getAreaHandler()->updateArea($name, $area);
+            $areaManager->updateArea($name, $area);
             $msg = TextFormat::GREEN . "The PvPArea called '$name' has been successfully updated.";
-        } else $msg = TextFormat::RED . "PvPArea called '$name' does not exist.";
+        } else {
+            $msg = TextFormat::RED . "PvPArea called '$name' does not exist.";
+        }
 
-        if(!is_null($msg)) $sender->sendMessage($msg);
+        if($msg !== null) {
+            $sender->sendMessage($msg);
+        }
     }
 
+    /**
+     * @param CommandSender $sender
+     * @param string $name
+     * @param float $kb
+     *
+     * Set knockback.
+     */
     private function setKB(CommandSender $sender, string $name, float $kb) : void {
 
         $msg = null;
@@ -202,9 +267,13 @@ class AreaCommand extends BaseCommand
             $area = PvPCore::getAreaHandler()->getArea($name);
             $area = $area->setKB(abs($kb));
             PvPCore::getAreaHandler()->updateArea($name, $area);
-            $msg = TextFormat::GREEN . "The PvPArea called '$name' has been successfully updated.";
-        } else $msg = TextFormat::RED . "PvPArea called '$name' does not exist.";
+            $msg = TextFormat::GREEN . "The PvPArea called '{$name}' has been successfully updated.";
+        } else {
+            $msg = TextFormat::RED . "PvPArea called '{$name}' does not exist.";
+        }
 
-        if(!is_null($msg)) $sender->sendMessage($msg);
+        if($msg !== null) {
+            $sender->sendMessage($msg);
+        }
     }
 }

@@ -6,6 +6,8 @@
  * Time: 21:57
  */
 
+declare(strict_types=1);
+
 namespace jkorn\pvpcore\world\areas;
 
 

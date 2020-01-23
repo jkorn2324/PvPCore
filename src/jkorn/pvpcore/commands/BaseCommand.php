@@ -194,13 +194,12 @@ class BaseCommand extends Command
             default:
         }
 
-        if($result){
-            if($param->hasExactValues()){
-                if(!$param->isExactValue($s)){
-                    $result = false;
-                }
-            }
+
+        if($result and $param->hasExactValues()) {
+            $result = !$param->isExactValue($s);
         }
+
+
         return $result;
     }
 
@@ -209,7 +208,8 @@ class BaseCommand extends Command
      * @return bool
      */
     protected function isBoolean(string $boolean) : bool {
-        return !is_null($this->getBoolean($boolean));
+        $isBool = $this->getBoolean($boolean);
+        return $isBool !== null;
     }
 
     /**
@@ -266,8 +266,6 @@ class BaseCommand extends Command
 
         $argsLen = count($args); $minLen = 0; $maxLen = 0;
 
-        $result = false;
-
         foreach($paramGroup as $parameter){
             $addToLen = true;
             if($parameter instanceof SimpleParameter){
@@ -275,7 +273,9 @@ class BaseCommand extends Command
                     $addToLen = false;
                 }
             }
-            if($addToLen) $minLen += 1;
+            if($addToLen) {
+                $minLen += 1;
+            }
             $maxLen += 1;
         }
 
@@ -295,6 +295,7 @@ class BaseCommand extends Command
      * @return mixed
      */
     public function canExecute(CommandSender $sender, string $label, array $args) : bool {
+
         $execute = false;
         $result = false;
         $msg = null;
@@ -320,7 +321,9 @@ class BaseCommand extends Command
             $msg = $this->getFullUsage();
         }
 
-        if(!is_null($msg)) $sender->sendMessage($msg);
+        if($msg !== null) {
+            $sender->sendMessage($msg);
+        }
 
         return $result;
     }
@@ -370,7 +373,7 @@ class BaseCommand extends Command
             }
         }
 
-        if(!is_null($desc)){
+        if($desc !== null){
             $str = $str . " - " . $desc;
         }
         return $str;

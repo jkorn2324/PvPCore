@@ -69,10 +69,10 @@ class SimpleParameter implements Parameter
     }
 
     /**
-     * @param string $str
+     * @param $str
      * @return bool
      */
-    public function isExactValue(string $str) : bool {
+    public function isExactValue($str) : bool {
         $val = $this->getExactValues();
         $result = false;
         if(is_array($val)){
