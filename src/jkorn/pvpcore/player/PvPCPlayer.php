@@ -12,6 +12,8 @@ namespace jkorn\pvpcore\player;
 
 use jkorn\pvpcore\PvPCore;
 use jkorn\pvpcore\world\areas\PvPCArea;
+use pocketmine\entity\Attribute;
+use pocketmine\entity\Entity;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use stdClass;
@@ -68,5 +70,45 @@ class PvPCPlayer extends Player
         }
 
         $this->sendMessage(TextFormat::RED . "Failed to create the PvPArea.");
+    }
+
+    /**
+     * @param Entity $attacker
+     * @param float $damage
+     * @param float $x
+     * @param float $z
+     * @param float $base
+     *
+     * Gives the player knockback values.
+     */
+    public function knockBack(Entity $attacker, float $damage, float $x, float $z, float $base = 0.4): void
+    {
+        $xzKB = $base; $yKb = $base;
+        // TODO: Get player's pvp area and get knockback.
+
+        $f = sqrt($x * $x + $z * $z);
+        if($f <= 0)
+        {
+            return;
+        }
+        if(mt_rand() / mt_getrandmax() > $this->getAttributeMap()->getAttribute(Attribute::KNOCKBACK_RESISTANCE)->getValue())
+        {
+            $f = 1 / $f;
+
+            $motion = clone $this->motion;
+
+            $motion->x /= 2;
+            $motion->y /= 2;
+            $motion->z /= 2;
+            $motion->x += $x * $f * $xzKB;
+            $motion->y += $yKb;
+            $motion->z += $z * $f * $xzKB;
+
+            if($motion->y > $yKb){
+                $motion->y = $yKb;
+            }
+
+            $this->setMotion($motion);
+        }
     }
 }

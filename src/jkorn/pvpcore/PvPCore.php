@@ -37,10 +37,31 @@ class PvPCore extends PluginBase
         $this->initCommands();
         $this->initConfig();
 
-        self::$worldHandler = new WorldHandler($this);
-        self::$areaHandler = new AreaHandler($this);
+        // Loads all of the levels.
+        Utils::loadLevels($this);
+
+        if(!self::$worldHandler instanceof WorldHandler)
+        {
+            self::$worldHandler = new WorldHandler($this);
+        }
+
+        if(!self::$areaHandler instanceof AreaHandler)
+        {
+            self::$areaHandler = new AreaHandler($this);
+        }
 
         new PvPCoreListener($this);
+    }
+
+    /**
+     * Called when the PvPCore plugin is disabled.
+     */
+    public function onDisable()
+    {
+        if(self::$worldHandler instanceof WorldHandler)
+        {
+            self::$worldHandler->save();
+        }
     }
 
     /**

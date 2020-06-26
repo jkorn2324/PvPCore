@@ -30,6 +30,8 @@ class PvPCWorld implements IKBObject
 
     /** @var PvPCKnockback */
     private $knockbackInfo;
+    /** @var string */
+    private $localizedLevel;
 
     /**
      * PvPCWorld constructor.
@@ -40,8 +42,19 @@ class PvPCWorld implements IKBObject
     public function __construct(string $lvl, bool $kb, PvPCKnockback $knockback)
     {
         $this->customKb = $kb;
+        $this->localizedLevel = $lvl;
         $this->level = Server::getInstance()->getLevelByName($lvl);
         $this->knockbackInfo = $knockback;
+    }
+
+    /**
+     * @return string
+     *
+     * Gets the localized name of the level.
+     */
+    public function getLocalizedLevel(): string
+    {
+        return $this->localizedLevel;
     }
 
     /**
@@ -92,9 +105,8 @@ class PvPCWorld implements IKBObject
     public function toArray(): array
     {
         return [
-            "level" => $this->level !== null ? $this->level->getName() : null,
-            "customKB" => $this->customKb,
-            "kb-info" => $this->getKnockback()->toArray()
+            "kbEnabled" => $this->customKb,
+            "kbInfo" => $this->getKnockback()->toArray()
         ];
     }
 
@@ -137,5 +149,28 @@ class PvPCWorld implements IKBObject
         $level = $player1->getLevel();
         return Utils::areLevelsEqual($level, $player2->getLevel())
             && Utils::areLevelsEqual($level, $this->level);
+    }
+
+    /**
+     * @param string $worldName
+     * @param array $data
+     * @return PvPCWorld|null
+     *
+     * Decodes the data & turns it into a PvPCWorld object.
+     */
+    public static function decode(string $worldName, array $data): ?PvPCWorld
+    {
+        if(isset($data["customKB"], $data["kbInfo"]))
+        {
+            $customKB = (bool)$data["customKB"];
+            $knockback = PvPCKnockback::decode($data["kbInfo"]) ?? new PvPCKnockback();
+            return new PvPCWorld(
+                $worldName,
+                $customKB,
+                $knockback
+            );
+        }
+
+        return null;
     }
 }

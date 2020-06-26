@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace jkorn\pvpcore\utils;
 
 
+use jkorn\pvpcore\PvPCore;
 use pocketmine\command\Command;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
@@ -134,4 +135,39 @@ class Utils
     {
         return $level1->getId() === $level2->getId();
     }
+
+    /**
+     * Loads all of the levels on the server.
+     * @param PvPCore|null $core - The PvPCore main file.
+     */
+    public static function loadLevels(?PvPCore $core = null): void
+    {
+        $core = $core ?? PvPCore::getInstance();
+        if(($index = strpos("/plugin_data", $dataFolder = $core->getDataFolder())) === false)
+        {
+            return;
+        }
+
+        $worldsFolder = substr($dataFolder, 0, $index) . "/worlds";
+        if(!is_dir($worldsFolder))
+        {
+            return;
+        }
+
+        $files = scandir($worldsFolder);
+        if(count($files) <= 0)
+        {
+            return;
+        }
+
+        $server = $core->getServer();
+        foreach($files as $file)
+        {
+            if(!$server->isLevelLoaded($file) && strpos($file, ".") === false)
+            {
+                $server->loadLevel($file);
+            }
+        }
+    }
+
 }

@@ -93,7 +93,7 @@ class PvPCommand extends BaseCommand
 
         $worldManager = PvPCore::getWorldHandler();
 
-        if ($worldManager->isWorld($level)) {
+        /* if ($worldManager->isWorld($level)) {
 
             $world = PvPCore::getWorldHandler()->getPvPCWorld($level);
 
@@ -112,7 +112,7 @@ class PvPCommand extends BaseCommand
             $msg = TextFormat::RED . "Level '$level' does not exist!";
         }
 
-        $sender->sendMessage($msg);
+        $sender->sendMessage($msg); */
     }
 
     /**
@@ -125,7 +125,7 @@ class PvPCommand extends BaseCommand
     {
         $worldManager = PvPCore::getWorldHandler();
 
-        if ($worldManager->isWorld($level)) {
+        /* if ($worldManager->isWorld($level)) {
 
             $hasUpdated = false;
             $updatedVal = "None";
@@ -172,7 +172,6 @@ class PvPCommand extends BaseCommand
         if(isset($msg))
         {
             $sender->sendMessage($msg);
-        }
-
+        } */
     }
 }

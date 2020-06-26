@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace jkorn\pvpcore\world;
 
 use jkorn\pvpcore\PvPCore;
+use jkorn\pvpcore\utils\PvPCKnockback;
 use pocketmine\level\Level;
+use pocketmine\Server;
 use pocketmine\utils\Config;
 
 /**
@@ -14,7 +16,6 @@ use pocketmine\utils\Config;
  * Date: 2019-04-05
  * Time: 11:33
  */
-
 class WorldHandler
 {
 
@@ -23,6 +24,10 @@ class WorldHandler
 
     /** @var string */
     private $path;
+    /** @var Server */
+    private $server;
+    /** @var PvPCore */
+    private $core;
 
     /**
      * WorldHandler constructor.
@@ -30,28 +35,34 @@ class WorldHandler
      */
     public function __construct(PvPCore $core)
     {
-        $this->worlds = [];
-        $this->path = $core->getDataFolder() . "arenas.json";
+        $this->core = $core;
+        $this->server = $core->getServer();
 
-        $this->initArenas();
+        $this->worlds = [];
+        $this->path = $core->getDataFolder() . "worlds.json";
+
+        $this->initWorlds();
     }
 
     /**
      * Initialize the arenas.
      */
-    private function initArenas(): void
+    private function initWorlds(): void
     {
-        if(!file_exists($this->path))
-        {
+        if (!file_exists($this->path)) {
             $file = fopen($this->path, "w");
             fclose($file);
+
+            // TODO: Decode using old format.
             return;
         }
 
         $contents = json_decode(file_get_contents($this->path), true);
-        foreach($contents as $arenaName => $data)
-        {
-            // todo
+        foreach ($contents as $worldName => $data) {
+            $decoded = PvPCWorld::decode($worldName, $data);
+            if ($decoded !== null) {
+                $this->worlds[$decoded->getLocalizedLevel()] = $decoded;
+            }
         }
     }
 
@@ -61,64 +72,33 @@ class WorldHandler
      *
      * Gets the pvp world from the level (name or instance).
      */
-    public function getPvPCWorld($level)
+    public function getWorld($level)
     {
-        /* $result = null;
-        $worlds = $this->getAllWorlds();
-        if(count($worlds) > 0){
-            if(array_key_exists($level, $worlds) and is_array($worlds[$level])){
-                $map = $worlds[$level];
-                $customKb = null;
-                $attackDelay = null;
-                $knockback = null;
-
-                if(array_key_exists("customKb", $map) and is_bool($map["customKb"])){
-                    $customKb = $map["customKb"];
-                }
-                if(array_key_exists("attack-delay", $map) and is_int($map["attack-delay"])){
-                    $attackDelay = $map["attack-delay"];
-                }
-
-                if(array_key_exists("knockback", $map) and is_float($map["knockback"])){
-                    $knockback = $map["knockback"];
-                }
-
-                if(is_bool($customKb) and is_int($attackDelay) and is_float($knockback)){
-                    $result = new PvPCWorld($level, $customKb, $attackDelay, $knockback);
-                }
+        if ($level instanceof Level) {
+            if (!isset($this->worlds[$levelName = $level->getName()])) {
+                $this->worlds[$levelName] = new PvPCWorld($levelName, true, new PvPCKnockback());
             }
+            return $this->worlds[$levelName];
+        } elseif (is_string($level)) {
+            $loaded = true;
+            if (!$this->server->isLevelLoaded($level)) {
+                $loaded = $this->server->loadLevel($level);
+            }
+
+            if (!$loaded) {
+                return null;
+            }
+            return $this->getWorld($this->server->getLevelByName($level));
         }
-        return $result; */
         return null;
     }
 
     /**
-     * @param string|Level $level
-     * @return bool
-     *
-     * Determines if the level is registered to the pvp worlds list.
+     * Saves all the worlds data to the file.
      */
-    public function isWorld($level) : bool
+    public function save(): void
     {
-        // return !is_null($this->getWorld($level));
-        return false;
-    }
-
-    /**
-     * @param PvPCWorld $world
-     *
-     * Adds the world to the worlds list & saves it to the config.
-     */
-    public function addWorld(PvPCWorld $world): void
-    {
-        /* $map = $world->toMap();
-        $name = $world->getLevel()->getName();
-        $worlds = $this->config->get("worlds");
-        if(is_array($worlds) and !key_exists($name, $worlds)){
-            $worlds[$name] = $map;
-            $this->config->set("worlds", $worlds);
-            $this->config->save();
-        } */
+        // TODO
     }
 
     /**
