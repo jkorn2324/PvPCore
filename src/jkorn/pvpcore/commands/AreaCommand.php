@@ -104,7 +104,7 @@ class AreaCommand extends BaseCommand
                     $this->deletePvPArea($sender, strval($args[1]));
                     break;
                 case "list":
-                    $msg = PvPCore::getAreaHandler()->listAreas();
+                    // $msg = PvPCore::getAreaHandler()->listAreas();
                     break;
                 case "pos1":
                     $this->setPosition($sender, false);

@@ -6,51 +6,6 @@ author: jkorn
 description: A plugin that edits the knockback of the player.
 
 permissions:
-  pvpcore.permission.pvp:
-    description: "Permission for using the base pvp command."
-    default: true
-  pvpcore.permission.pvp.help:
-    description: "Permission for using the /pvp help command."
-    default: op
-  pvpcore.permission.pvp.set:
-    description: "Permission for using the /pvp set command."
-    default: op
-  pvpcore.permission.pvp.enable:
-    description: "Permission for using the /pvp enable command."
-    default: op
-  pvpcore.permission.pvp.disable:
-    description: "Permission for using the /pvp disable command."
-    default: op
-  pvpcore.permission.pvparea:
-    description: "Permission for using the base pvparea command."
-    default: true
-  pvpcore.permission.pvparea.help:
-    description: "Permission for using the /pvparea help command."
-    default: op
-  pvpcore.permission.pvparea.create:
-    description: "Permission for using the /pvparea create command."
-    default: op
-  pvpcore.permission.pvparea.delete:
-    description: "Permission for using the /pvparea delete command."
-    default: op
-  pvpcore.permission.pvparea.list:
-    description: "Permission for using the /pvparea list command."
-    default: op
-  pvpcore.permission.pvparea.pos1:
-    description: "Permission for using the /pvparea pos1 command."
-    default: op
-  pvpcore.permission.pvparea.pos2:
-    description: "Permission for using the /pvparea pos2 command."
-    default: op
-  pvpcore.permission.pvparea.enable:
-    description: "Permission for using the /pvparea enable command."
-    default: op
-  pvpcore.permission.pvparea.disable:
-    description: "Permission for using the /pvparea disable command."
-    default: op
-  pvpcore.permission.pvparea.kb:
-    description: "Permission for using the /pvparea kb command."
-    default: op
-  pvpcore.permission.pvparea.attdel:
-    description: "Permission for using the /pvparea attdel command."
+  pvpcore.permission.menu:
+    description: "Permission for using the PvPCore menu."
     default: op

@@ -13,6 +13,7 @@ namespace jkorn\pvpcore;
 
 use jkorn\pvpcore\commands\AreaCommand;
 use jkorn\pvpcore\commands\PvPCommand;
+use jkorn\pvpcore\commands\PvPCoreCommand;
 use jkorn\pvpcore\utils\Utils;
 use jkorn\pvpcore\world\areas\AreaHandler;
 use pocketmine\plugin\PluginBase;
@@ -35,22 +36,20 @@ class PvPCore extends PluginBase
         self::$instance = $this;
 
         $this->initCommands();
-        $this->initConfig();
 
         // Loads all of the levels.
         Utils::loadLevels($this);
 
-        if(!self::$worldHandler instanceof WorldHandler)
-        {
+        if (!self::$worldHandler instanceof WorldHandler) {
             self::$worldHandler = new WorldHandler($this);
         }
 
-        if(!self::$areaHandler instanceof AreaHandler)
-        {
+        if (!self::$areaHandler instanceof AreaHandler) {
             self::$areaHandler = new AreaHandler($this);
         }
 
         new PvPCoreListener($this);
+        $this->deleteConfig();
     }
 
     /**
@@ -58,9 +57,12 @@ class PvPCore extends PluginBase
      */
     public function onDisable()
     {
-        if(self::$worldHandler instanceof WorldHandler)
-        {
+        if (self::$worldHandler instanceof WorldHandler) {
             self::$worldHandler->save();
+        }
+
+        if(self::$areaHandler instanceof AreaHandler) {
+            self::$areaHandler->save();
         }
     }
 
@@ -69,7 +71,7 @@ class PvPCore extends PluginBase
      *
      * The static instance of the plugin.
      */
-    public static function getInstance() : PvPCore
+    public static function getInstance(): PvPCore
     {
         return self::$instance;
     }
@@ -79,7 +81,7 @@ class PvPCore extends PluginBase
      *
      * The world handler.
      */
-    public static function getWorldHandler() : WorldHandler
+    public static function getWorldHandler(): WorldHandler
     {
         return self::$worldHandler;
     }
@@ -89,86 +91,21 @@ class PvPCore extends PluginBase
      *
      * The area manager.
      */
-    public static function getAreaHandler() : AreaHandler
+    public static function getAreaHandler(): AreaHandler
     {
         return self::$areaHandler;
     }
 
     /**
-     * Initializes the config.
+     * Deletes the old config from the plugin folder
+     * if it exists.
      */
-    private function initConfig() : void
+    private function deleteConfig(): void
     {
-        /* $levels = $this->getServer()->getLevels();
-
-        $allWorlds = [];
-
-        foreach($levels as $level) {
-            $name = $level->getName();
-            $defaultAttackDelay = 10;
-            $customKb = false;
-            $knockback = 0.4;
-            $world = new PvPCWorld($name, $customKb, $defaultAttackDelay, $knockback);
-            array_push($allWorlds, $world);
+        $configFile = $this->getDataFolder() . "config.yml";
+        if (file_exists($configFile)) {
+            unlink($configFile);
         }
-
-        $file = $this->getDataFolder() . "/config.yml";
-        $config = new Config($file, Config::YAML, []);
-
-        $worldsKey = "worlds";
-        $areasKey = "areas";
-
-        if(!$config->exists($worldsKey)) {
-            $config->set($worldsKey, []);
-            $config->save();
-        }
-
-        if(!$config->exists($areasKey)) {
-            $config->set($areasKey, []);
-            $config->save();
-        }
-
-        $worlds = $config->get($worldsKey);
-
-        $edited = false;
-
-        foreach($allWorlds as $world) {
-            if($world instanceof PvPCWorld) {
-                $name = $world->getLevel()->getName();
-                if(!array_key_exists($name, $worlds)) {
-                    $worlds[$name] = $world->toMap();
-                    $edited = true;
-                }
-            }
-        }
-
-        if($edited === true) {
-            $config->set("$worldsKey", $worlds);
-            $config->save();
-        } */
-    }
-
-    /**
-     * @param string $s
-     * @param bool $isInteger
-     * @return bool
-     */
-    public static function canParse($s, bool $isInteger): bool
-    {
-
-        if(is_string($s)) {
-
-            $canParse = is_numeric($s);
-
-        } else {
-            if($isInteger){
-                $canParse = is_int($s);
-            } else {
-                $canParse = is_float($s);
-            }
-        }
-
-        return $canParse;
     }
 
     /**
@@ -176,7 +113,6 @@ class PvPCore extends PluginBase
      */
     private function initCommands()
     {
-        Utils::registerCommand(new PvPCommand());
-        Utils::registerCommand(new AreaCommand());
+        Utils::registerCommand(new PvPCoreCommand());
     }
 }

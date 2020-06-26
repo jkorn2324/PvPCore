@@ -7,6 +7,7 @@ namespace jkorn\pvpcore\world;
 use jkorn\pvpcore\PvPCore;
 use jkorn\pvpcore\utils\PvPCKnockback;
 use pocketmine\level\Level;
+use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\Config;
 
@@ -45,7 +46,7 @@ class WorldHandler
     }
 
     /**
-     * Initialize the arenas.
+     * Initialize the worlds.
      */
     private function initWorlds(): void
     {
@@ -53,7 +54,24 @@ class WorldHandler
             $file = fopen($this->path, "w");
             fclose($file);
 
-            // TODO: Decode using old format.
+            // Decodes the data worlds based on the old format.
+            $config = $this->core->getDataFolder() . "/config.yml";
+            if(file_exists($config))
+            {
+                $data = yaml_parse_file($config);
+                if(isset($data["worlds"]))
+                {
+                    $worlds = $data["worlds"];
+                    foreach($worlds as $worldName => $data)
+                    {
+                        $pvpCWorld = PvPCWorld::decodeLegacy($worldName, $data);
+                        if($pvpCWorld instanceof PvPCWorld)
+                        {
+                            $this->worlds[$pvpCWorld->getLocalizedLevel()] = $pvpCWorld;
+                        }
+                    }
+                }
+            }
             return;
         }
 
@@ -91,6 +109,45 @@ class WorldHandler
             return $this->getWorld($this->server->getLevelByName($level));
         }
         return null;
+    }
+
+    /**
+     * @param Player $player1
+     * @param Player $player2
+     * @return PvPCWorld|null
+     *
+     * Gets the world used for knockback based on the players.
+     */
+    public function getWorldKnockback(Player $player1, Player $player2): ?PvPCWorld
+    {
+        foreach($this->worlds as $world)
+        {
+            if($world->canUseKnocback($player1, $player2))
+            {
+                return $world;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets all of the PvPCore worlds.
+     * @return PvPCWorld[]
+     */
+    public function getWorlds()
+    {
+        $worlds = [];
+        $levels = $this->server->getLevels();
+        foreach($levels as $level)
+        {
+            $pvpCWorld = $this->getWorld($level);
+            if($pvpCWorld instanceof PvPCWorld)
+            {
+                $worlds[] = $pvpCWorld;
+            }
+        }
+        return $worlds;
     }
 
     /**

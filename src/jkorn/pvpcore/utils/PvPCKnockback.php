@@ -53,9 +53,9 @@ class PvPCKnockback implements IExportedValue
     /**
      * @return float
      *
-     * Gets the x-kb value.
+     * Gets the horizontal kb value.
      */
-    public function getXKb(): float
+    public function getXZKb(): float
     {
         return $this->xKB;
     }
@@ -63,7 +63,7 @@ class PvPCKnockback implements IExportedValue
     /**
      * @return float
      *
-     * Gets the y-kb value.
+     * Gets the vertical kb value.
      */
     public function getYKb(): float
     {

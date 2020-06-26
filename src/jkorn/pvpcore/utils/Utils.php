@@ -12,11 +12,14 @@ namespace jkorn\pvpcore\utils;
 
 
 use jkorn\pvpcore\PvPCore;
+use jkorn\pvpcore\world\areas\PvPCArea;
+use jkorn\pvpcore\world\PvPCWorld;
 use pocketmine\command\Command;
 use pocketmine\level\Level;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\Server;
+use pocketmine\utils\TextFormat;
 
 class Utils
 {
@@ -24,6 +27,10 @@ class Utils
     const X_KB = "kb-x";
     const Y_KB = "kb-y";
     const SPEED_KB = "kb-speed";
+
+    const ACTION_DELETE_AREA = 0;
+    const ACTION_EDIT_AREA = 1;
+    const ACTION_VIEW_AREA = 2;
 
     /**
      * @param Vector3 $vec3
@@ -170,4 +177,52 @@ class Utils
         }
     }
 
+    /**
+     * @param Player $player
+     * @param Player $attacker
+     * @return PvPCKnockback|null
+     *
+     * Gets the custom knockback for the player.
+     */
+    public static function getKnockbackFor(Player $player, Player $attacker): ?PvPCKnockback
+    {
+        $area = PvPCore::getAreaHandler()->getAreaKnockback($player, $attacker);
+        if($area instanceof PvPCArea)
+        {
+            return $area->getKnockback();
+        }
+
+        $world = PvPCore::getWorldHandler()->getWorldKnockback($player, $attacker);
+        if($world instanceof PvPCWorld)
+        {
+            return $world->getKnockback();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $s
+     * @param bool $isInteger
+     * @return bool
+     */
+    public static function canParse($s, bool $isInteger): bool
+    {
+        if(is_string($s))
+        {
+            return is_numeric($s);
+        }
+
+        return $isInteger ? is_int($s) : is_float($s);
+    }
+
+    /**
+     * @return string
+     *
+     * Gets the prefix of the messages, returns title of the form.
+     */
+    public static function getPrefix(): string
+    {
+        return TextFormat::BOLD . TextFormat::DARK_GRAY . "[" . TextFormat::BLUE . "PvPCore" . TextFormat::DARK_GRAY . "]" . TextFormat::RESET;
+    }
 }

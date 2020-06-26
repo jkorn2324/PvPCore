@@ -47,45 +47,4 @@ class PvPCoreListener implements Listener
     {
         $event->setPlayerClass(PvPCPlayer::class);
     }
-
-    /**
-     * @param EntityDamageByEntityEvent $event
-     * @priority LOW
-     * @ignoreCancelled FALSE
-     */
-    public function onEntityDamage(EntityDamageByEntityEvent $event) : void {
-
-        /* $damager = $event->getDamager(); $damaged = $event->getEntity();
-
-        if($damaged instanceof Player and $damager instanceof Player){
-
-            $damager = $damager->getPlayer();
-
-            $damaged = $damaged->getPlayer();
-
-            $lvl = $damaged->getLevel();
-            $world = PvPCore::getWorldHandler()->getPvPCWorld($lvl);
-
-            if($world !== null and $world instanceof PvPCWorld){
-
-                $useCustomKB = $world->hasCustomKB();
-                $time = $world->getAttackDelayTime();
-                $knockback = $world->getKnockBack();
-
-                if(PvPCore::getAreaHandler()->isInSameAreas($damaged, $damager)) {
-                    $closestArea = PvPCore::getAreaHandler()->getClosestAreaTo($damaged->getPlayer());
-                    if($closestArea->canUseAreaKB()) {
-                        $knockback = $closestArea->getKnockback();
-                        $time = $closestArea->getAttackDelay();
-                        $useCustomKB = $closestArea->canUseAreaKB();
-                    }
-                }
-
-                if($useCustomKB === true) {
-                    $event->setKnockBack($knockback);
-                    $event->setAttackCooldown($time);
-                }
-            }
-        } */
-    }
 }

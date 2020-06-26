@@ -13,7 +13,7 @@ namespace jkorn\pvpcore\commands;
 use jkorn\pvpcore\commands\parameters\BaseParameter;
 use jkorn\pvpcore\commands\parameters\Parameter;
 use jkorn\pvpcore\commands\parameters\SimpleParameter;
-use jkorn\pvpcore\PvPCore;
+use jkorn\pvpcore\utils\Utils;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\utils\CommandException;
@@ -87,17 +87,17 @@ class BaseCommand extends Command
                         $theName = $parameter->getName();
                         if($theName === $name)
                         {
-                            $paramGroup = $value;
-                            break;
+                            return $paramGroup;
                         }
                     }
                 }
-            } else if(is_string($key))
+            } else if(is_string($key) && $key === $name)
             {
-                $paramGroup = $this->parameters[$key];
+                return $this->parameters[$key];
             }
         }
-        return $paramGroup;
+
+        return null;
     }
 
     /**
@@ -211,21 +211,17 @@ class BaseCommand extends Command
         switch($param->getParameterType())
         {
             case Parameter::PARAMTYPE_INTEGER:
-                $result = PvPCore::canParse($s, true);
+                $result = Utils::canParse($s, true);
                 break;
             case Parameter::PARAMTYPE_FLOAT:
-                $result = PvPCore::canParse($s, false);
+                $result = Utils::canParse($s, false);
                 break;
             case Parameter::PARAMTYPE_BOOLEAN:
                 $result = $this->isBoolean($s);
                 break;
-            case Parameter::PARAMTYPE_TARGET:
-                $result = true;
-                break;
-            case Parameter::PARAMTYPE_STRING:
-                $result = true;
-                break;
             case Parameter::PARAMTYPE_ANY:
+            case Parameter::PARAMTYPE_STRING:
+            case Parameter::PARAMTYPE_TARGET:
                 $result = true;
                 break;
         }

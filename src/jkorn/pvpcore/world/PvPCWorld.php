@@ -18,7 +18,6 @@ use pocketmine\level\Level;
  * Date: 2019-04-05
  * Time: 11:17
  */
-
 class PvPCWorld implements IKBObject
 {
 
@@ -72,7 +71,7 @@ class PvPCWorld implements IKBObject
      *
      * Determines if the KB is enabled or not.
      */
-    public function isCustomKBEnabled(): bool
+    public function isKBEnabled(): bool
     {
         return $this->customKb;
     }
@@ -82,7 +81,7 @@ class PvPCWorld implements IKBObject
      *
      * Sets the custom kb.
      */
-    public function setCustomKBEnabled(bool $b): void
+    public function setKBEnabled(bool $b): void
     {
         $this->customKb = $b;
     }
@@ -118,15 +117,13 @@ class PvPCWorld implements IKBObject
      */
     public function equals($object): bool
     {
-        if($object instanceof PvPCWorld)
-        {
+        if ($object instanceof PvPCWorld) {
             $level = $object->getLevel();
-            if($level instanceof Level && $this->level instanceof Level)
-            {
+            if ($level instanceof Level && $this->level instanceof Level) {
                 return Utils::areLevelsEqual($this->level, $level);
             }
 
-           return $this->knockbackInfo->equals($object->getKnockback());
+            return $this->knockbackInfo->equals($object->getKnockback());
         }
 
         return false;
@@ -141,8 +138,7 @@ class PvPCWorld implements IKBObject
      */
     public function canUseKnocback(Player $player1, Player $player2): bool
     {
-        if(!$this->level instanceof Level || !$this->customKb)
-        {
+        if (!$this->level instanceof Level || !$this->customKb) {
             return false;
         }
 
@@ -156,12 +152,11 @@ class PvPCWorld implements IKBObject
      * @param array $data
      * @return PvPCWorld|null
      *
-     * Decodes the data & turns it into a PvPCWorld object.
+     * Decodes the data & turns it into a PvPCWorld object according to the new format.
      */
     public static function decode(string $worldName, array $data): ?PvPCWorld
     {
-        if(isset($data["customKB"], $data["kbInfo"]))
-        {
+        if (isset($data["customKB"], $data["kbInfo"])) {
             $customKB = (bool)$data["customKB"];
             $knockback = PvPCKnockback::decode($data["kbInfo"]) ?? new PvPCKnockback();
             return new PvPCWorld(
@@ -172,5 +167,37 @@ class PvPCWorld implements IKBObject
         }
 
         return null;
+    }
+
+    /**
+     * @param string $worldName
+     * @param $data
+     * @return PvPCWorld|null
+     *
+     * Decodes the data and turns it into a PvPCWorld object based on the old format.
+     */
+    public static function decodeLegacy(string $worldName, $data): ?PvPCWorld
+    {
+        $customKB = true;
+        $attackDelay = 10;
+        $knockback = 0.4;
+
+        if (isset($data["customKb"])) {
+            $customKB = $data["customKb"];
+        }
+
+        if (isset($data["attack-delay"])) {
+            $attackDelay = (int)$data["attack-delay"];
+        }
+
+        if (isset($data["knockback"])) {
+            $knockback = (float)$data["knockback"];
+        }
+
+        return new PvPCWorld(
+            $worldName,
+            $customKB,
+            new PvPCKnockback($knockback, $knockback, $attackDelay)
+        );
     }
 }

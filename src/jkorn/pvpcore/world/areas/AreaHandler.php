@@ -29,13 +29,11 @@ class AreaHandler
 
     /** @var PvPCArea[] */
     private $areas;
-
     /** @var string */
     private $areaFile;
 
     /** @var Server */
     private $server;
-
     /** @var PvPCore */
     private $core;
 
@@ -110,6 +108,20 @@ class AreaHandler
     }
 
     /**
+     * Saves the PvPAreas to the json file.
+     */
+    public function save(): void
+    {
+        $areas = [];
+        foreach($this->areas as $area)
+        {
+            $areas[$area->getName()] = $area->toArray();
+        }
+
+        file_put_contents($this->areaFile, json_encode($areas));
+    }
+
+    /**
      * @param stdClass $info
      * @param Level $level
      * @param string $name
@@ -167,18 +179,6 @@ class AreaHandler
 
     /**
      * @param string $name
-     * @return bool
-     *
-     * Determines if the area exists.
-     */
-    public function doesAreaExist(string $name): bool
-    {
-        // return !is_null($this->getArea($name));
-        return isset($this->areas[$name]);
-    }
-
-    /**
-     * @param string $name
      * @return PvPCArea|null
      *
      * Gets a area based on the name.
@@ -188,6 +188,26 @@ class AreaHandler
         if(isset($this->areas[$name]))
         {
             return $this->areas[$name];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Player $player
+     * @param Player $attacker
+     * @return PvPCArea|null
+     *
+     * Gets the area from the player's location.
+     */
+    public function getAreaKnockback(Player $player, Player $attacker): ?PvPCArea
+    {
+        foreach($this->areas as $area)
+        {
+            if($area->canUseKnocback($player, $attacker))
+            {
+                return $area;
+            }
         }
 
         return null;
@@ -219,86 +239,5 @@ class AreaHandler
     public function getAreas()
     {
         return $this->areas;
-    }
-
-    /**
-     * @return string
-     *
-     * Lists the areas in the manager.
-     */
-    public function listAreas(): string
-    {
-        /* $areas = $this->getAreas();
-
-        $len = count($areas) - 1;
-
-        $count = 0;
-
-        $result = "List of PvPAreas: {Areas}";
-
-        $replaced = "None";
-
-        if($len + 1 > 0) {
-
-            $replaced = "";
-
-            foreach($areas as $area) {
-
-                $comma = ($count === $len) ? "" : ", ";
-
-                $level = $area->getLevel()->getName();
-
-                $replaced .= $area->getName() . " ($level)" . $comma;
-
-                $count++;
-            }
-        }
-
-        return str_replace("{Areas}", $replaced, $result); */
-        // TODO: list areas
-
-        return "";
-    }
-
-    /**
-     * @param Player $player
-     * @return bool
-     *
-     * Determines if the player is in the area.
-     */
-    public function isInArea(Player $player): bool
-    {
-        // return !is_null($this->getClosestAreaTo($player));
-        // TODO: if the player is in area
-        return false;
-    }
-
-    /**
-     * @param Player $a
-     * @param Player $b
-     * @return bool
-     *
-     * Determines if the players are in the same area.
-     */
-    public function isInSameAreas(Player $a, Player $b) : bool
-    {
-
-        /* $result = false;
-
-        if($this->isInArea($a) and $this->isInArea($b)) {
-
-            $bArea = $this->getClosestAreaTo($b);
-
-            $aArea = $this->getClosestAreaTo($a);
-
-            if(!is_null($bArea) and !is_null($aArea))
-                $result = $bArea->equals($aArea);
-
-        }
-
-        return $result; */
-        // TODO: if the players are in the same areas.
-
-        return false;
     }
 }
