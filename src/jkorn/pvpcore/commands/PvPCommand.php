@@ -29,27 +29,25 @@ class PvPCommand extends BaseCommand
         $param = new SimpleParameter(Parameter::NO_PERMISSION, "knockback|attackdelay", Parameter::PARAMTYPE_STRING);
         $param = $param->setExactValues(true);
 
-        $params = array(
-            0 => array(
+        $this->setParameters([
+            [
                 new BaseParameter("help", parent::getPermission(), "See all pvp commands.", true)
-            ),
-
-            1 => array(
+            ],
+            [
                 new BaseParameter("set", parent::getPermission(), "Configures the knockback settings of a level.", true),
                 new SimpleParameter(Parameter::NO_PERMISSION, "level", Parameter::PARAMTYPE_STRING),
                 $param,
                 new SimpleParameter(Parameter::NO_PERMISSION, "value", Parameter::PARAMTYPE_ANY)
-            ),
-            2 => array(
+            ],
+            [
                 new BaseParameter("enable", parent::getPermission(), "Enables custom knockback in the specified level.", true),
                 new SimpleParameter(Parameter::NO_PERMISSION, "level", Parameter::PARAMTYPE_STRING)
-            ),
-            3 => array(
+            ],
+            [
                 new BaseParameter("disable", parent::getPermission(), "Disables custom knockback in the specified level"),
                 new SimpleParameter(Parameter::NO_PERMISSION, "level", Parameter::PARAMTYPE_STRING)
-            )
-        );
-        $this->setParameters($params);
+            ]
+        ]);
     }
 
     /**
@@ -60,13 +58,13 @@ class PvPCommand extends BaseCommand
      */
     public function execute(CommandSender $sender, string $label, array $args)
     {
-        $msg = null;
-
-        if (parent::canExecute($sender, $label, $args)) {
+        if (parent::canExecute($sender, $label, $args))
+        {
             $param = $args[0];
-            switch ($param) {
+            switch ($param)
+            {
                 case "help":
-                    $msg = $this->getFullUsage();
+                    $sender->sendMessage($this->getFullUsage());
                     break;
                 case "set":
                     $this->executeSetWorld($sender, $args[1], $args[2], $args[3]);
@@ -79,12 +77,9 @@ class PvPCommand extends BaseCommand
                     $level = $args[1];
                     $this->executeCustomKB($sender, $level, false);
                     break;
-                default:
             }
         }
-        if ($msg !== null) {
-            $sender->sendMessage($msg);
-        }
+
         return true;
     }
 
@@ -95,32 +90,29 @@ class PvPCommand extends BaseCommand
      */
     protected function executeCustomKB(CommandSender $sender, string $level, bool $enable): void
     {
-        $msg = null;
 
         $worldManager = PvPCore::getWorldHandler();
 
         if ($worldManager->isWorld($level)) {
 
-            $world = PvPCore::getWorldHandler()->getWorld($level);
+            $world = PvPCore::getWorldHandler()->getPvPCWorld($level);
 
             $format = $enable ? TextFormat::GREEN : TextFormat::RED;
 
             $enabled = $enable ? "enabled" : "disabled";
 
-            $world = $world->setHasCustomKB($enable);
+            $world = $world->setCustomKBEnabled($enable);
 
             $worldManager->updateWorld($world);
 
             $msg = $format . "Custom Knockback has been successfully " . $enabled . "!";
 
         } else {
+
             $msg = TextFormat::RED . "Level '$level' does not exist!";
         }
 
-        if ($msg !== null) {
-
-            $sender->sendMessage($msg);
-        }
+        $sender->sendMessage($msg);
     }
 
     /**
@@ -131,8 +123,6 @@ class PvPCommand extends BaseCommand
      */
     protected function executeSetWorld(CommandSender $sender, $level, $setting, $value)
     {
-        $msg = null;
-
         $worldManager = PvPCore::getWorldHandler();
 
         if ($worldManager->isWorld($level)) {
@@ -151,33 +141,36 @@ class PvPCommand extends BaseCommand
                     $updatedVal = "attack-delay";
                     $value = intval($value);
                     break;
-                default:
             }
 
-            $world = $worldManager->getWorld($level);
+            $world = $worldManager->getPvPCWorld($level);
 
             if ($updatedVal !== "None") {
 
-                if ($updatedVal === "attack-delay" and PvPCore::canParse($value, true)) {
+                if ($updatedVal === "attack-delay" && PvPCore::canParse($value, true)) {
                     $world = $world->setAttackDelayTime($value);
                     $hasUpdated = true;
                 }
-                if ($updatedVal === "knockback" and PvPCore::canParse($value, false)) {
+
+                if ($updatedVal === "knockback" && PvPCore::canParse($value, false)) {
                     $world = $world->setKB($value);
                     $hasUpdated = true;
                 }
             }
 
-            if ($hasUpdated === true) {
+            if ($hasUpdated) {
                 $worldManager->updateWorld($world);
                 $msg = TextFormat::GREEN . "The level '{$level}' has been successfully updated!";
             } else {
                 $msg = TextFormat::RED . "The level '{$level}' failed to update!";
             }
 
-        } else $msg = TextFormat::RED . "Level '{$level}' does not exist!";
+        } else {
+            $msg = TextFormat::RED . "Level '{$level}' does not exist!";
+        }
 
-        if($msg !== null){
+        if(isset($msg))
+        {
             $sender->sendMessage($msg);
         }
 

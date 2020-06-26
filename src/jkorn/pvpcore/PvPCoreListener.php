@@ -11,21 +11,41 @@ namespace jkorn\pvpcore;
  * Time: 16:06
  */
 
+use jkorn\pvpcore\player\PvPCPlayer;
 use jkorn\pvpcore\world\PvPCWorld;
 use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\player\PlayerCreationEvent;
 use pocketmine\Player;
+use pocketmine\Server;
 
 class PvPCoreListener implements Listener
 {
-    private $theCore;
+    /** @var PvPCore */
+    private $core;
+    /** @var Server */
+    private $server;
 
     /**
      * PvPCoreListener constructor.
      * @param PvPCore $core
      */
-    public function __construct(PvPCore $core) {
-        $this->theCore = $core;
+    public function __construct(PvPCore $core)
+    {
+        $this->core = $core;
+        $this->server = $core->getServer();
+
+        $this->server->getPluginManager()->registerEvents($this, $core);
+    }
+
+    /**
+     * @param PlayerCreationEvent $event
+     *
+     * Sets the player class.
+     */
+    public function setPlayerClass(PlayerCreationEvent $event): void
+    {
+        $event->setPlayerClass(PvPCPlayer::class);
     }
 
     /**
@@ -35,7 +55,7 @@ class PvPCoreListener implements Listener
      */
     public function onEntityDamage(EntityDamageByEntityEvent $event) : void {
 
-        $damager = $event->getDamager(); $damaged = $event->getEntity();
+        /* $damager = $event->getDamager(); $damaged = $event->getEntity();
 
         if($damaged instanceof Player and $damager instanceof Player){
 
@@ -44,7 +64,7 @@ class PvPCoreListener implements Listener
             $damaged = $damaged->getPlayer();
 
             $lvl = $damaged->getLevel();
-            $world = PvPCore::getWorldHandler()->getWorldFromLevel($lvl);
+            $world = PvPCore::getWorldHandler()->getPvPCWorld($lvl);
 
             if($world !== null and $world instanceof PvPCWorld){
 
@@ -66,6 +86,6 @@ class PvPCoreListener implements Listener
                     $event->setAttackCooldown($time);
                 }
             }
-        }
+        } */
     }
 }

@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace jkorn\pvpcore\world;
 
+use jkorn\pvpcore\utils\IKBObject;
+use jkorn\pvpcore\utils\PvPCKnockback;
+use jkorn\pvpcore\utils\IExportedValue;
+use jkorn\pvpcore\utils\Utils;
+use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\level\Level;
 
@@ -14,95 +19,123 @@ use pocketmine\level\Level;
  * Time: 11:17
  */
 
-class PvPCWorld
+class PvPCWorld implements IKBObject
 {
-    private $attackDelayTime;
 
+    /** @var Level|null */
     private $level;
 
+    /** @var bool */
     private $customKb;
 
-    private $knockback;
+    /** @var PvPCKnockback */
+    private $knockbackInfo;
 
     /**
      * PvPCWorld constructor.
      * @param string $lvl
      * @param bool $kb
-     * @param int $delayTime
-     * @param float $kbSize
+     * @param PvPCKnockback $knockback
      */
-    public function __construct(string $lvl, bool $kb, int $delayTime, float $kbSize)
+    public function __construct(string $lvl, bool $kb, PvPCKnockback $knockback)
     {
         $this->customKb = $kb;
-        $this->attackDelayTime = $delayTime;
-        $this->level = $lvl;
-        $this->knockback = $kbSize;
+        $this->level = Server::getInstance()->getLevelByName($lvl);
+        $this->knockbackInfo = $knockback;
     }
 
     /**
-     * @return Level
+     * @return Level|null
+     *
+     * Gets the level in the world.
      */
-    public function getLevel() : Level {
-        return Server::getInstance()->getLevelByName($this->level);
+    public function getLevel(): ?Level
+    {
+        return $this->level;
     }
 
     /**
      * @return bool
+     *
+     * Determines if the KB is enabled or not.
      */
-    public function hasCustomKB() : bool {
+    public function isCustomKBEnabled(): bool
+    {
         return $this->customKb;
     }
 
     /**
-     * @return int
-     */
-    public function getAttackDelayTime() : int {
-        return $this->attackDelayTime;
-    }
-
-    /**
-     * @return float
-     */
-    public function getKnockBack() : float {
-        return $this->knockback;
-    }
-
-    /**
      * @param bool $b
-     * @return PvPCWorld
+     *
+     * Sets the custom kb.
      */
-    public function setHasCustomKB(bool $b) : PvPCWorld {
+    public function setCustomKBEnabled(bool $b): void
+    {
         $this->customKb = $b;
-        return $this;
     }
 
     /**
-     * @param int $i
-     * @return PvPCWorld
+     * @return PvPCKnockback
+     *
+     * Gets
      */
-    public function setAttackDelayTime(int $i) : PvPCWorld {
-        $this->attackDelayTime = $i;
-        return $this;
-    }
-
-    /**
-     * @param float $f
-     * @return PvPCWorld
-     */
-    public function setKB(float $f) : PvPCWorld {
-        $this->knockback = $f;
-        return $this;
+    public function getKnockback(): PvPCKnockback
+    {
+        return $this->knockbackInfo;
     }
 
     /**
      * @return array
+     *
+     * Converts the world to an array.
      */
-    public function toMap() : array {
-        $result = [
-            "customKb" => $this->customKb,
-            "attack-delay" => $this->attackDelayTime,
-            "knockback" => $this->knockback
+    public function toArray(): array
+    {
+        return [
+            "level" => $this->level !== null ? $this->level->getName() : null,
+            "customKB" => $this->customKb,
+            "kb-info" => $this->getKnockback()->toArray()
         ];
-        return $result;
+    }
+
+    /**
+     * @param $object
+     * @return bool
+     *
+     * Determines if the objects are equivalent.
+     */
+    public function equals($object): bool
+    {
+        if($object instanceof PvPCWorld)
+        {
+            $level = $object->getLevel();
+            if($level instanceof Level && $this->level instanceof Level)
+            {
+                return Utils::areLevelsEqual($this->level, $level);
+            }
+
+           return $this->knockbackInfo->equals($object->getKnockback());
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Player $player1
+     * @param Player $player2
+     * @return bool
+     *
+     * Determines if the players can use the custom knockback.
+     */
+    public function canUseKnocback(Player $player1, Player $player2): bool
+    {
+        if(!$this->level instanceof Level || !$this->customKb)
+        {
+            return false;
+        }
+
+        $level = $player1->getLevel();
+        return Utils::areLevelsEqual($level, $player2->getLevel())
+            && Utils::areLevelsEqual($level, $this->level);
     }
 }

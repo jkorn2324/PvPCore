@@ -12,170 +12,223 @@ namespace jkorn\pvpcore\world\areas;
 
 
 use jkorn\pvpcore\PvPCore;
+use jkorn\pvpcore\utils\PvPCKnockback;
+use pocketmine\level\Level;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\Config;
+use stdClass;
 
 class AreaHandler
 {
 
     /* @var Config */
-    private $config;
+    // private $config;
 
-    public function __construct(PvPCore $core) {
-        $this->config = $core->getConfig();
+    /** @var PvPCArea[] */
+    private $areas;
+
+    /** @var string */
+    private $areaFile;
+
+    /** @var Server */
+    private $server;
+
+    /** @var PvPCore */
+    private $core;
+
+    public function __construct(PvPCore $core)
+    {
+        $this->areas = [];
+
+        $this->core = $core;
+        $this->server = $core->getServer();
+
+        $this->initAreas($core->getDataFolder());
     }
 
-    public function createArea(Player $player, string $name) : void {
+    /**
+     * @param string $dataFolder
+     *
+     * Initializes the areas and stores them to the array.
+     */
+    private function initAreas(string $dataFolder): void
+    {
+        $this->areaFile = $dataFolder . "area.json";
 
-        $firstPos = $player->asPosition()->add(16, 0, 16);
+        if(!file_exists($this->areaFile))
+        {
+            $file = fopen($this->areaFile, "w");
+            fclose($file);
 
-        $firstPos = $firstPos->setComponents($firstPos->x, 0, $firstPos->z);
+            $this->decodeAreas($dataFolder . "/config.yml", false);
+            return;
+        }
 
-        $secPos = $player->asPosition()->add(-16, 0, -16);
+        $this->decodeAreas($this->areaFile);
+    }
 
-        $secPos = $secPos->setComponents($secPos->x, 256, $secPos->z);
+    /**
+     * @param string $file
+     * @param bool $json
+     *
+     * Decodes the areas accordingly, used for initialization only.
+     */
+    private function decodeAreas(string $file, bool $json = true): void
+    {
+        if($json)
+        {
+            $contents = json_decode(file_get_contents($file), true);
+            foreach($contents as $areaName => $data)
+            {
+                $area = PvPCArea::decode($areaName, $data);
+                if($area instanceof PvPCArea)
+                {
+                    $this->areas[$area->getName()] = $area;
+                }
+            }
+        }
+        else
+        {
+            if(!file_exists($file))
+            {
+                return;
+            }
 
-        $firstPos = new Position($firstPos->x, $firstPos->y, $firstPos->z, $player->level);
-
-        $secPos = new Position($secPos->x, $secPos->y, $secPos->z, $player->level);
-
-        $area = new PvPCArea($name, $player->getLevel(), $firstPos, $secPos);
-
-        $areas = $this->config->get("areas");
-
-        if(!array_key_exists($name, $areas)) {
-            $areas[$name] = $area->toMap();
-            $this->config->set("areas", $areas);
-            $this->config->save();
+            $contents = yaml_parse_file($file)["areas"];
+            foreach($contents as $name => $data)
+            {
+                $area = PvPCArea::decodeLegacy($name, $data);
+                if($area instanceof PvPCArea)
+                {
+                    $this->areas[$area->getName()] = $area;
+                }
+            }
         }
     }
 
-    public function deleteArea(string $name) : void {
-
-        $areas = $this->config->get("areas");
-
-        if(array_key_exists($name, $areas)) {
-            unset($areas[$name]);
-            $this->config->set("areas", $areas);
-            $this->config->save();
+    /**
+     * @param stdClass $info
+     * @param Level $level
+     * @param string $name
+     * @return bool - Returns true if the area is successfully created.
+     *
+     * Create an area based on the information and its name.
+     */
+    public function createArea(stdClass $info, Level $level, string $name): bool
+    {
+        // Checks if area exists.
+        if(isset($this->areas[$name]))
+        {
+            return false;
         }
+
+        if(isset($info->firstPos, $info->secondPos))
+        {
+            /** @var Vector3 $firstPos */
+            $firstPos = $info->firstPos;
+            /** @var Vector3 $secondPos */
+            $secondPos = $info->secondPos;
+
+            $area = new PvPCArea(
+                $name,
+                $level,
+                $firstPos,
+                $secondPos,
+                new PvPCKnockback()
+            );
+
+            $this->areas[$area->getName()] = $area;
+
+            return true;
+        }
+
+        return false;
     }
 
-    public function doesAreaExist(string $name) : bool {
-        return !is_null($this->getArea($name));
+    /**
+     * @param string $name
+     * @return bool - Returns true if area has been deleted.
+     *
+     * Deletes the area based on the name.
+     */
+    public function deleteArea(string $name): bool
+    {
+        if(isset($this->areas[$name]))
+        {
+            unset($this->areas[$name]);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     *
+     * Determines if the area exists.
+     */
+    public function doesAreaExist(string $name): bool
+    {
+        // return !is_null($this->getArea($name));
+        return isset($this->areas[$name]);
     }
 
     /**
      * @param string $name
      * @return PvPCArea|null
+     *
+     * Gets a area based on the name.
      */
-    public function getArea(string $name) {
-
-        $areas = $this->config->get("areas");
-
-        $result = null;
-
-        if(array_key_exists($name, $areas)) {
-
-            $area = $areas[$name];
-
-            $level = null;
-            $firstPos = null;
-            $secPos = null;
-            $kb = 0.4;
-            $attackDel = 10;
-            $enabled = true;
-
-            if(array_key_exists("level", $area))
-                $level = Server::getInstance()->getLevelByName($area["level"]);
-
-            if(array_key_exists("kb", $area))
-                $kb = floatval($area["kb"]);
-
-            if(array_key_exists("attack-delay", $area))
-                $attackDel = intval($area["attack-delay"]);
-
-            if(array_key_exists("enabled", $area))
-                $enabled = boolval($area["enabled"]);
-
-            if(array_key_exists("first-pos", $area)) {
-                $vec3 = $this->parseVec3($area["first-pos"]);
-                if(!is_null($vec3) and !is_null($level)) $firstPos = new Position($vec3->x, $vec3->y, $vec3->z, $level);
-            }
-
-            if(array_key_exists("second-pos", $area)) {
-                $vec3 = $this->parseVec3($area["second-pos"]);
-                if(!is_null($vec3) and !is_null($level)) $secPos = new Position($vec3->x, $vec3->y, $vec3->z, $level);
-            }
-
-            $found = !is_null($secPos) and !is_null($firstPos) and !is_null($level);
-
-            if($found === true)
-                $result = new PvPCArea($name, $level, $firstPos, $secPos, $kb, $attackDel, $enabled);
+    public function getArea($name)
+    {
+        if(isset($this->areas[$name]))
+        {
+            return $this->areas[$name];
         }
 
-        return $result;
+        return null;
     }
 
-    public function updateArea(string $name, PvPCArea $area) : void {
-
-        $areas = $this->config->get("areas");
+    /**
+     * @param string $name
+     * @param PvPCArea $area
+     *
+     * Updates a pvp area based on the name and area.
+     */
+    public function updateArea(string $name, PvPCArea $area): void
+    {
+        // TODO
+        /* $areas = $this->config->get("areas");
 
         if(array_key_exists($name, $areas)) {
             $areas[$name] = $area->toMap();
             $this->config->set("areas", $areas);
             $this->config->save();
-        }
+        } */
     }
 
     /**
      * @return array|PvPCArea[]
+     *
+     * Gets the areas.
      */
-    public function getAreas() : array {
-
-        $areas = $this->config->get("areas");
-
-        $keys = array_keys($areas);
-
-        $result = [];
-
-        foreach($keys as $key) {
-
-            $area = $this->getArea($key);
-
-            if(!is_null($area))
-                $result[] = $area;
-        }
-
-        return $result;
+    public function getAreas()
+    {
+        return $this->areas;
     }
 
     /**
-     * @param Player $player
-     * @return PvPCArea|null
+     * @return string
+     *
+     * Lists the areas in the manager.
      */
-    public function getClosestAreaTo(Player $player) {
-
-        $areas = $this->getAreas();
-
-        $result = null;
-
-        foreach($areas as $area) {
-            if($area->isWithinBounds($player)) {
-                $result = $area;
-                break;
-            }
-        }
-
-        return $result;
-    }
-
-    public function listAreas() : string {
-
-        $areas = $this->getAreas();
+    public function listAreas(): string
+    {
+        /* $areas = $this->getAreas();
 
         $len = count($areas) - 1;
 
@@ -201,16 +254,36 @@ class AreaHandler
             }
         }
 
-        return str_replace("{Areas}", $replaced, $result);
+        return str_replace("{Areas}", $replaced, $result); */
+        // TODO: list areas
+
+        return "";
     }
 
-    public function isInArea(Player $player) : bool {
-        return !is_null($this->getClosestAreaTo($player));
+    /**
+     * @param Player $player
+     * @return bool
+     *
+     * Determines if the player is in the area.
+     */
+    public function isInArea(Player $player): bool
+    {
+        // return !is_null($this->getClosestAreaTo($player));
+        // TODO: if the player is in area
+        return false;
     }
 
-    public function isInSameAreas(Player $a, Player $b) : bool {
+    /**
+     * @param Player $a
+     * @param Player $b
+     * @return bool
+     *
+     * Determines if the players are in the same area.
+     */
+    public function isInSameAreas(Player $a, Player $b) : bool
+    {
 
-        $result = false;
+        /* $result = false;
 
         if($this->isInArea($a) and $this->isInArea($b)) {
 
@@ -223,39 +296,9 @@ class AreaHandler
 
         }
 
-        return $result;
-    }
+        return $result; */
+        // TODO: if the players are in the same areas.
 
-    /**
-     * @param $val
-     * @return Vector3|null
-     */
-    private function parseVec3($val) {
-
-        $result = null;
-
-        if(is_array($val)) {
-
-            $x = -1;
-            $y = -1;
-            $z = -1;
-
-            if(array_key_exists("x", $val))
-                $x = floatval($val["x"]);
-
-            if(array_key_exists("y", $val))
-                $y = floatval($val["y"]);
-
-            if(array_key_exists("z", $val))
-                $z = floatval($val["z"]);
-
-
-            $canParse = $x !== -1 and $y !== -1 and $z !== -1;
-
-            if($canParse === true)
-                $result = new Vector3($x, $y, $z);
-        }
-
-        return $result;
+        return false;
     }
 }

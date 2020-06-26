@@ -14,12 +14,9 @@ namespace jkorn\pvpcore;
 use jkorn\pvpcore\commands\AreaCommand;
 use jkorn\pvpcore\commands\PvPCommand;
 use jkorn\pvpcore\world\areas\AreaHandler;
-use jkorn\pvpcore\world\PvPCWorld;
-use pocketmine\command\Command;
 use pocketmine\plugin\PluginBase;
 use jkorn\pvpcore\world\WorldHandler;
-use pocketmine\Server;
-use pocketmine\utils\Config;
+
 
 class PvPCore extends PluginBase
 {
@@ -36,40 +33,52 @@ class PvPCore extends PluginBase
     public function onEnable()
     {
         self::$instance = $this;
+
         $this->initCommands();
         $this->initConfig();
+
         self::$worldHandler = new WorldHandler($this);
         self::$areaHandler = new AreaHandler($this);
-        $this->getServer()->getPluginManager()->registerEvents(new PvPCoreListener($this), $this);
+
+        new PvPCoreListener($this);
     }
 
     /**
      * @return PvPCore
+     *
+     * The static instance of the plugin.
      */
-    public static function getInstance() : PvPCore {
+    public static function getInstance() : PvPCore
+    {
         return self::$instance;
     }
 
     /**
      * @return WorldHandler
+     *
+     * The world handler.
      */
-    public static function getWorldHandler() : WorldHandler {
+    public static function getWorldHandler() : WorldHandler
+    {
         return self::$worldHandler;
     }
 
     /**
      * @return AreaHandler
+     *
+     * The area manager.
      */
-    public static function getAreaHandler() : AreaHandler {
+    public static function getAreaHandler() : AreaHandler
+    {
         return self::$areaHandler;
     }
 
     /**
      * Initializes the config.
      */
-    private function initConfig() : void {
-
-        $levels = $this->getServer()->getLevels();
+    private function initConfig() : void
+    {
+        /* $levels = $this->getServer()->getLevels();
 
         $allWorlds = [];
 
@@ -115,7 +124,7 @@ class PvPCore extends PluginBase
         if($edited === true) {
             $config->set("$worldsKey", $worlds);
             $config->save();
-        }
+        } */
     }
 
     /**
@@ -123,7 +132,8 @@ class PvPCore extends PluginBase
      * @param bool $isInteger
      * @return bool
      */
-    public static function canParse($s, bool $isInteger) : bool {
+    public static function canParse($s, bool $isInteger): bool
+    {
 
         if(is_string($s)) {
 
@@ -141,19 +151,11 @@ class PvPCore extends PluginBase
     }
 
     /**
-     * @param string $name
-     * @param Command $command
-     */
-    public function registerCommand(string $name, Command $command){
-        Server::getInstance()->getCommandMap()->register($name, $command);
-    }
-
-    /**
      * Initializes all of the commands.
      */
     private function initCommands()
     {
-        $this->registerCommand("pvp", new PvPCommand());
-        $this->registerCommand("pvparea", new AreaCommand());
+        Utils::registerCommand(new PvPCommand());
+        Utils::registerCommand(new AreaCommand());
     }
 }

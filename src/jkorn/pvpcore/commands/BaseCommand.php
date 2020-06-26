@@ -21,6 +21,7 @@ use pocketmine\command\utils\CommandException;
 class BaseCommand extends Command
 {
 
+    /** @var array[] */
     protected $parameters;
 
     /**
@@ -33,32 +34,39 @@ class BaseCommand extends Command
     {
         parent::__construct($name, $description, $usageMessage);
         parent::setPermission("pvpcore.permission.$name");
-        $this->parameters = array();
+        $this->parameters = [];
     }
 
     /**
      * @param array $params
+     *
+     * Sets the parameters of the command.
      */
-    public function setParameters(array $params) : void {
+    public function setParameters(array $params) : void
+    {
         $this->parameters = $params;
     }
 
     /**
      * @return bool
+     *
+     * Determines the parameters are correct.
      */
-    private function areParametersCorrect() : bool {
-        $result = true;
-        if(is_array($this->parameters)){
+    private function areParametersCorrect() : bool
+    {
+        if(is_array($this->parameters))
+        {
             $size = count($this->parameters);
-            for($v = 0; $v < $size; $v++){
+            for($v = 0; $v < $size; $v++)
+            {
                 $group = $this->parameters[$v];
-                if(!is_array($group)){
-                    $result = false;
-                    break;
+                if(!is_array($group))
+                {
+                    return false;
                 }
             }
         }
-        return $result;
+        return true;
     }
 
     /**
@@ -66,21 +74,26 @@ class BaseCommand extends Command
      * @return mixed|null
      */
     private function getParamGroupFrom(string $name){
+
         $paramGroup = null;
-        $keys = array_keys($this->parameters);
-        foreach($keys as $key){
-            if(is_int($key) and is_array($this->parameters[$key])){
-                $arr = $this->parameters[$key];
-                foreach($arr as $parameter){
-                    if($parameter instanceof Parameter){
+        foreach($this->parameters as $key => $value)
+        {
+            if(is_int($key) && is_array($value))
+            {
+                foreach($value as $parameter)
+                {
+                    if($parameter instanceof Parameter)
+                    {
                         $theName = $parameter->getName();
-                        if($theName === $name){
-                            $paramGroup = $arr;
+                        if($theName === $name)
+                        {
+                            $paramGroup = $value;
                             break;
                         }
                     }
                 }
-            } else if(is_string($key)){
+            } else if(is_string($key))
+            {
                 $paramGroup = $this->parameters[$key];
             }
         }
@@ -90,8 +103,11 @@ class BaseCommand extends Command
     /**
      * @param string $name
      * @return bool
+     *
+     * Determines if the parameter group exists.
      */
-    private function hasParamGroup(string $name) : bool {
+    private function hasParamGroup(string $name): bool
+    {
         return $this->getParamGroupFrom($name) != null;
     }
 
@@ -99,61 +115,78 @@ class BaseCommand extends Command
      * @param CommandSender $sender
      * @param string $paramGroup
      * @return bool
+     *
+     * Checks the permissions based on the parameter group.
      */
-    protected function checkPermissions(CommandSender $sender, string $paramGroup) : bool {
-        $result = false;
-        if($this->hasParamGroup($paramGroup)) {
+    protected function checkPermissions(CommandSender $sender, string $paramGroup): bool
+    {
+        if($this->hasParamGroup($paramGroup))
+        {
             $group = $this->getParamGroupFrom($paramGroup);
             $groupLen = count($group);
-            if($groupLen > 0){
+            if($groupLen > 0)
+            {
                 $baseParameter = $group[0];
-                if($baseParameter instanceof BaseParameter){
-                    if($baseParameter->hasPermission()){
+                if($baseParameter instanceof BaseParameter)
+                {
+                    if($baseParameter->hasPermission())
+                    {
                         $perm = $baseParameter->getPermission();
-                        if($sender->hasPermission($perm)){
-                            $result = true;
-                        }
-                    } else {
-                        $result = true;
+                        return $sender->hasPermission($perm);
                     }
-                }
-            } else {
-                if($sender->hasPermission(parent::getPermission())){
-                    $result = true;
+                    return true;
                 }
             }
+            else
+            {
+                return $sender->hasPermission(parent::getPermission());
+            }
         }
-        return $result;
+        return false;
     }
 
     /**
      * @param array $args
      * @param array $paramGroup
      * @return bool
+     *
+     * Determines if the command has proper command types.
+     * TODO
      */
     protected function hasProperParamTypes(array $args, array $paramGroup) : bool {
 
         $count = 0;
         $result = true;
-        foreach($paramGroup as $parameter){
+        foreach($paramGroup as $parameter)
+        {
             $paramArg = $args[$count];
-            if($parameter instanceof BaseParameter){
-                if(is_string(($paramArg))){
-                    if($paramArg !== $parameter->getName()){
+            if($parameter instanceof BaseParameter)
+            {
+                if(is_string(($paramArg)))
+                {
+                    if($paramArg !== $parameter->getName())
+                    {
                         $result = false;
                         break;
                     }
-                } else {
+                }
+                else
+                {
                     $result = false;
                     break;
                 }
-            } else if ($parameter instanceof SimpleParameter) {
-                if(is_string($paramArg)) {
-                    if (!$this->hasProperParamType($paramArg, $parameter)) {
+            } else if ($parameter instanceof SimpleParameter)
+            {
+                if(is_string($paramArg))
+                {
+                    if (!$this->hasProperParamType($paramArg, $parameter))
+                    {
                         $result = false;
                         break;
                     }
-                } else {
+                }
+                else
+                {
                     $result = false;
                     break;
                 }
@@ -167,12 +200,16 @@ class BaseCommand extends Command
      * @param string $s
      * @param SimpleParameter $param
      * @return bool
+     *
+     * Determines if the player has a valid parameter type.
      */
-    public function hasProperParamType(string $s, SimpleParameter $param) : bool {
+    public function hasProperParamType(string $s, SimpleParameter $param): bool
+    {
 
         $result = false;
 
-        switch($param->getParameterType()){
+        switch($param->getParameterType())
+        {
             case Parameter::PARAMTYPE_INTEGER:
                 $result = PvPCore::canParse($s, true);
                 break;
@@ -191,14 +228,12 @@ class BaseCommand extends Command
             case Parameter::PARAMTYPE_ANY:
                 $result = true;
                 break;
-            default:
         }
 
-
-        if($result and $param->hasExactValues()) {
+        if($result && $param->hasExactValues())
+        {
             $result = !$param->isExactValue($s);
         }
-
 
         return $result;
     }
@@ -206,8 +241,11 @@ class BaseCommand extends Command
     /**
      * @param string $boolean
      * @return bool
+     *
+     * Determines if the parameter type is a boolean.
      */
-    protected function isBoolean(string $boolean) : bool {
+    protected function isBoolean(string $boolean): bool
+    {
         $isBool = $this->getBoolean($boolean);
         return $isBool !== null;
     }
@@ -215,55 +253,61 @@ class BaseCommand extends Command
     /**
      * @param SimpleParameter $param
      * @return string
+     *
+     * Outputs the parameter type.
      */
-    protected function getParameterType(SimpleParameter $param) : string {
-        $string = $param->getName();
-        $result = $string;
-        switch($param->getParameterType()){
+    protected function getParameterType(SimpleParameter $param): string
+    {
+        $parameterName = $param->getName();
+        switch($param->getParameterType())
+        {
             case Parameter::PARAMTYPE_INTEGER:
-                $result = "[int : $string]";
-                break;
+                return "[int : {$parameterName}]";
             case Parameter::PARAMTYPE_FLOAT:
-                $result = "[float : $string]";
-                break;
+                return "[float : {$parameterName}]";
             case Parameter::PARAMTYPE_BOOLEAN:
-                $result = "[boolean : $string]";
-                break;
+                return "[boolean : {$parameterName}]";
             case Parameter::PARAMTYPE_TARGET:
-                $result = "[target : $string]";
-                break;
+                return "[target : {$parameterName}]";
             case Parameter::PARAMTYPE_STRING:
-                $result = "[string : $string]";
-                break;
+                return "[string : {$parameterName}]";
             case Parameter::PARAMTYPE_ANY:
-                $result = "[any : $string]";
-                break;
-            default:
+                return "[any : {$parameterName}]";
         }
-        return $result;
+        return $parameterName;
     }
 
     /**
      * @param string $s
      * @return bool|null
+     *
+     * Gets the boolean based on a string value.
      */
-    protected function getBoolean(string $s) {
-        $result = null;
-        if($s === "enable" or $s === "on" or $s == "true"){
-            $result = true;
-        } else if ($s === "disable" or $s === "off" or $s === "false"){
-            $result = false;
+    protected function getBoolean(string $s)
+    {
+        if($s === "enable" or $s === "on" or $s == "true")
+        {
+            return true;
         }
-        return $result;
+        elseif ($s === "disable" or $s === "off" or $s === "false")
+        {
+            return false;
+        }
+
+        return null;
     }
 
     /**
      * @param array $args
      * @param array $paramGroup
      * @return bool
+     *
+     * Determines if the parameter has a proper length.
+     *
+     * // TODO
      */
-    protected function hasProperParamLen(array $args, array $paramGroup) : bool {
-
+    protected function hasProperParamLen(array $args, array $paramGroup): bool
+    {
         $argsLen = count($args); $minLen = 0; $maxLen = 0;
 
         foreach($paramGroup as $parameter){
@@ -282,7 +326,7 @@ class BaseCommand extends Command
         if($minLen === $maxLen){
             $result = $argsLen === $maxLen;
         } else {
-            $result = $argsLen >= $minLen and $argsLen <= $maxLen;
+            $result = $argsLen >= $minLen && $argsLen <= $maxLen;
         }
         return $result;
     }
@@ -296,21 +340,26 @@ class BaseCommand extends Command
      */
     public function canExecute(CommandSender $sender, string $label, array $args) : bool {
 
-        $execute = false;
-        $result = false;
-        $msg = null;
-        if($this->areParametersCorrect()){
+        $execute = false; $result = false;
+
+        if($this->areParametersCorrect())
+        {
             $len = count($args);
-            if($len > 0 and $this->hasParamGroup($args[0])){
+            if($len > 0 && $this->hasParamGroup($args[0]))
+            {
                 $execute = true;
             }
         }
 
-        if($execute){
-            if($this->checkPermissions($sender, $args[0])){
+        if($execute)
+        {
+            if($this->checkPermissions($sender, $args[0]))
+            {
                 $paramGroup = $this->getParamGroupFrom($args[0]);
-                if($this->hasProperParamLen($args, $paramGroup) and $this->hasProperParamTypes($args, $paramGroup)){
+                if($this->hasProperParamLen($args, $paramGroup) && $this->hasProperParamTypes($args, $paramGroup))
+                {
                     $result = true;
+
                 } else {
                     $msg = $this->getUsageOf($paramGroup, false);
                 }
@@ -321,7 +370,8 @@ class BaseCommand extends Command
             $msg = $this->getFullUsage();
         }
 
-        if($msg !== null) {
+        if(isset($msg))
+        {
             $sender->sendMessage($msg);
         }
 
@@ -330,7 +380,7 @@ class BaseCommand extends Command
 
     /**
      * @param CommandSender $sender
-     * @param string $commandLabel
+     * @param string $label
      * @param string[] $args
      *
      * @return mixed
@@ -344,28 +394,36 @@ class BaseCommand extends Command
     /**
      * @param array $paramGrp
      * @param bool $fullMsg
-     * @return String
+     * @return string
      */
-    protected function getUsageOf(array $paramGrp, bool $fullMsg) : String {
+    protected function getUsageOf(array $paramGrp, bool $fullMsg) : string
+    {
+
         $theCommandName = parent::getName();
         $str = ($fullMsg ? " - /$theCommandName " : "Usage: /$theCommandName ");
         $count = 0;
         $desc = null;
         $len = count($paramGrp) - 1;
 
-        foreach($paramGrp as $parameter){
-            if($parameter instanceof Parameter) {
-
-                if ($count === 0) {
+        foreach($paramGrp as $parameter)
+        {
+            if($parameter instanceof Parameter)
+            {
+                if ($count === 0)
+                {
                     $name = $parameter->getName();
                     $s = ($len === 0 ? "" : " ");
                     $str = $str . $name . $s;
-                    if($parameter instanceof BaseParameter){
+
+                    if($parameter instanceof BaseParameter)
+                    {
                         $desc = $parameter->getDescription();
                     }
+
                 } else {
                     $space = ($count === $len ? "" : " ");
-                    if($parameter instanceof SimpleParameter){
+                    if($parameter instanceof SimpleParameter)
+                    {
                         $str = $str . $this->getParameterType($parameter) . $space;
                     }
                 }
@@ -373,28 +431,32 @@ class BaseCommand extends Command
             }
         }
 
-        if($desc !== null){
+        if($desc !== null)
+        {
             $str = $str . " - " . $desc;
         }
+
         return $str;
     }
 
     /**
      * @return string
      */
-    protected function getFullUsage() : string {
-
-        $array = array();
-
+    protected function getFullUsage() : string
+    {
+        $array = [];
         $size = count($this->parameters);
 
-        for($i = 0; $i < $size; $i++){
+        for($i = 0; $i < $size; $i++)
+        {
             $arr = $this->parameters[$i];
-            if(is_array($arr) and count($arr) > 0){
+            if(is_array($arr) && count($arr) > 0)
+            {
                 $first = $arr[0];
-                if($first instanceof Parameter){
+                if($first instanceof Parameter)
+                {
                     $name = $first->getName();
-                    array_push($array, $name);
+                    $array[] = $name;
                 }
             }
         }
@@ -402,12 +464,16 @@ class BaseCommand extends Command
         $result = "All the " . parent::getName() . " commands:\n";
         $count = 0;
         $len = count($array) - 1;
-        foreach($array as $string){
-            if(is_string($string)){
+        foreach($array as $string)
+        {
+            if(is_string($string))
+            {
                 $newLine = "\n";
-                if($count == $len){
+                if($count == $len)
+                {
                     $newLine = "";
                 }
+
                 $result = $result . $this->getUsageOf($this->getParamGroupFrom($string), true) . $newLine;
                 $count++;
             }
