@@ -13,6 +13,7 @@ namespace jkorn\pvpcore;
 
 use jkorn\pvpcore\commands\AreaCommand;
 use jkorn\pvpcore\commands\PvPCommand;
+use jkorn\pvpcore\utils\Utils;
 use jkorn\pvpcore\world\areas\AreaHandler;
 use pocketmine\plugin\PluginBase;
 use jkorn\pvpcore\world\WorldHandler;
@@ -26,7 +27,6 @@ class PvPCore extends PluginBase
 
     /** @var WorldHandler */
     private static $worldHandler;
-
     /** @var AreaHandler */
     private static $areaHandler;
 
