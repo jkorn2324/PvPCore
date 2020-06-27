@@ -22,8 +22,8 @@ This plugin allows you to easily change the knockback the players take in a spec
 	- [x] Horizontal Knockback
 	- [x] Vertical Knockback
 	- [x] Attack Delay
-- [x] Knockback affecting an World.
-- [x] Knockback Affecting an Area
+- [x] Knockback affecting a World.
+- [x] Knockback affecting an Area
 - [x] Multi-Version Support
 	- [x] 1.14.60 Support
 	- [x] 1.16.0 Support
