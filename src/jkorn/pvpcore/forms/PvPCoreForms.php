@@ -9,7 +9,6 @@ use jkorn\pvpcore\forms\types\CustomForm;
 use jkorn\pvpcore\forms\types\SimpleForm;
 use jkorn\pvpcore\player\PvPCPlayer;
 use jkorn\pvpcore\PvPCore;
-use jkorn\pvpcore\utils\PvPCKnockback;
 use jkorn\pvpcore\utils\Utils;
 use jkorn\pvpcore\world\areas\PvPCArea;
 use jkorn\pvpcore\world\PvPCWorld;
@@ -200,8 +199,6 @@ class PvPCoreForms
 
                 switch ($type) {
                     case Utils::ACTION_EDIT_AREA:
-                        $form = self::getAreaMenu($player, $area, $type);
-                        break;
                     case Utils::ACTION_VIEW_AREA:
                         $form = self::getAreaMenu($player, $area, $type);
                         break;
