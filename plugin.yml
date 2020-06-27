@@ -1,8 +1,9 @@
 name: PvPCore
 main: jkorn\pvpcore\PvPCore
-version: 1.0.0
+version: 2.0.0
 api: "3.0.0"
 author: jkorn
+website: https://github.com/jkorn2324
 description: A plugin that edits the knockback of the player.
 
 permissions:
