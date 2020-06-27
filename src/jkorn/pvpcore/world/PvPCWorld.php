@@ -156,12 +156,12 @@ class PvPCWorld implements IKBObject
      */
     public static function decode(string $worldName, array $data): ?PvPCWorld
     {
-        if (isset($data["customKB"], $data["kbInfo"])) {
-            $customKB = (bool)$data["customKB"];
+        if (isset($data["kbEnabled"], $data["kbInfo"])) {
+            $kbEnabled = (bool)$data["kbEnabled"];
             $knockback = PvPCKnockback::decode($data["kbInfo"]) ?? new PvPCKnockback();
             return new PvPCWorld(
                 $worldName,
-                $customKB,
+                $kbEnabled,
                 $knockback
             );
         }

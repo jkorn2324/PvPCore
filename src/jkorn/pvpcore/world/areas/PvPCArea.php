@@ -51,11 +51,33 @@ class PvPCArea implements IKBObject
         $this->name = $name;
         $this->firstPos = $firstPos;
         $this->secondPos = $secondPos;
-        $this->level = $level instanceof Level ? $level : is_string($level) ? Server::getInstance()->getLevelByName($level) : null;
+        $this->level = $this->initLevel($level);
         $this->knockback = $knockback;
         $this->enabled = $enabled;
 
     }
+
+    /**
+     * @param $level - The address to the original level object.
+     * @return Level|null
+     */
+    private function initLevel(&$level): Level
+    {
+        if ($level === null) {
+            return null;
+        }
+
+        if (is_string($level)) {
+            return Server::getInstance()->getLevelByName($level);
+        }
+
+        if ($level instanceof Level) {
+            return $level;
+        }
+
+        return null;
+    }
+
 
     /**
      * @param Vector3 $pos
@@ -65,9 +87,11 @@ class PvPCArea implements IKBObject
      */
     public function setPosition(Vector3 $pos, bool $pos2): void
     {
-
-        $position = &($pos2 ? $this->secondPos : $this->firstPos);
-        $position = $pos;
+        if ($pos2) {
+            $this->secondPos = $pos;
+        } else {
+            $this->firstPos = $pos;
+        }
     }
 
     /**
@@ -124,7 +148,7 @@ class PvPCArea implements IKBObject
      *
      * Determines if the position is within the area.
      */
-    private function isWithinArea(Vector3 $pos) : bool
+    private function isWithinArea(Vector3 $pos): bool
     {
         $maxX = Utils::getMaxValue((float)$this->firstPos->x, (float)$this->secondPos->x);
         $minX = Utils::getMinValue((float)$this->firstPos->x, (float)$this->secondPos->x);
@@ -143,7 +167,7 @@ class PvPCArea implements IKBObject
      *
      * Converts the area to an array.
      */
-    public function toArray() : array
+    public function toArray(): array
     {
         return [
             "enabled" => $this->enabled,
@@ -160,11 +184,10 @@ class PvPCArea implements IKBObject
      *
      * Determines if the pvp area is equal to another.
      */
-    public function equals($object) : bool
+    public function equals($object): bool
     {
 
-        if ($object instanceof PvPCArea)
-        {
+        if ($object instanceof PvPCArea) {
             return $object->getName() === $this->name
                 && $object->isKBEnabled() === $this->enabled;
         }
@@ -182,15 +205,13 @@ class PvPCArea implements IKBObject
      */
     public function canUseKnocback(Player $player1, Player $player2): bool
     {
-        if(!$this->level instanceof Level || !$this->enabled)
-        {
+        if (!$this->level instanceof Level || !$this->enabled) {
             return false;
         }
 
         $level = $player1->getLevel();
-        if(!Utils::areLevelsEqual($level, $player2->getLevel())
-        || !Utils::areLevelsEqual($level, $this->level))
-        {
+        if (!Utils::areLevelsEqual($level, $player2->getLevel())
+            || !Utils::areLevelsEqual($level, $this->level)) {
             return false;
         }
 
@@ -207,13 +228,11 @@ class PvPCArea implements IKBObject
      */
     public static function decode(string $name, $data): ?PvPCArea
     {
-        if(isset($data["enabled"], $data["first-pos"], $data["second-pos"], $data["knockback"], $data["level"]))
-        {
+        if (isset($data["enabled"], $data["first-pos"], $data["second-pos"], $data["knockback"], $data["level"])) {
             $server = Server::getInstance();
 
             $level = $data["level"];
-            if($level !== null)
-            {
+            if ($level !== null) {
                 $server->loadLevel($level);
             }
 
@@ -222,8 +241,7 @@ class PvPCArea implements IKBObject
             $secondPos = Utils::arrToVec3($data["second-pos"]);
             $knockback = PvPCKnockback::decode($data["knockback"]);
 
-            if($firstPos !== null && $secondPos !== null && $knockback !== null)
-            {
+            if ($firstPos !== null && $secondPos !== null && $knockback !== null) {
                 return new PvPCArea(
                     $name,
                     $level,
@@ -247,13 +265,11 @@ class PvPCArea implements IKBObject
      */
     public static function decodeLegacy(string $name, $data): ?PvPCArea
     {
-        if(isset($data["level"], $data["kb"], $data["attack-delay"], $data["enabled"], $data["first-pos"], $data["second-pos"]))
-        {
+        if (isset($data["level"], $data["kb"], $data["attack-delay"], $data["enabled"], $data["first-pos"], $data["second-pos"])) {
             $server = Server::getInstance();
 
             $level = $data["level"];
-            if($level !== null)
-            {
+            if ($level !== null) {
                 $server->loadLevel($level);
             }
 
@@ -261,8 +277,7 @@ class PvPCArea implements IKBObject
             $firstPos = Utils::arrToVec3($data["first-pos"]);
             $secondPos = Utils::arrToVec3($data["second-pos"]);
 
-            if($firstPos !== null && $secondPos !== null)
-            {
+            if ($firstPos !== null && $secondPos !== null) {
                 return new PvPCArea(
                     $name,
                     $level,

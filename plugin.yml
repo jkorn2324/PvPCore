@@ -6,6 +6,6 @@ author: jkorn
 description: A plugin that edits the knockback of the player.
 
 permissions:
-  pvpcore.permission.menu:
+  pvpcore.permission.edit:
     description: "Permission for using the PvPCore menu."
     default: op

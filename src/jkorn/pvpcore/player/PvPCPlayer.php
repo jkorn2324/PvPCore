@@ -59,6 +59,17 @@ class PvPCPlayer extends Player
         $this->sendMessage(TextFormat::GREEN . "Successfully set the second position of the PvPArea.");
     }
 
+
+    /**
+     * @return stdClass|null
+     *
+     * Gets the area information of the player.
+     */
+    public function getAreaInfo(): ?stdClass
+    {
+        return $this->pvpAreaInfo;
+    }
+
     /**
      * @param string $name
      *
@@ -66,14 +77,11 @@ class PvPCPlayer extends Player
      */
     public function createArea(string $name): void
     {
-        if (PvPCore::getAreaHandler()->createArea($this->pvpAreaInfo, $this->getLevel(), $name)) {
+        if (PvPCore::getAreaHandler()->createArea($this->pvpAreaInfo, $name, $this)) {
             $this->sendMessage(TextFormat::GREEN . "Successfully created a new PvPArea.");
-
             $this->pvpAreaInfo = null;
             return;
         }
-
-        $this->sendMessage(TextFormat::RED . "Failed to create the PvPArea.");
     }
 
     /**

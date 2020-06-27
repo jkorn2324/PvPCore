@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: jkorn2324
+ * Date: 2020-06-26
+ * Time: 17:50
+ */
 
 declare(strict_types=1);
 
@@ -6,18 +12,20 @@ namespace jkorn\pvpcore\commands;
 
 
 use jkorn\pvpcore\forms\PvPCoreForms;
+use jkorn\pvpcore\PvPCore;
 use jkorn\pvpcore\utils\Utils;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\command\utils\CommandException;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-class PvPCoreCommand extends Command
+class EditWorldCommand extends Command
 {
 
     public function __construct()
     {
-        parent::__construct("pvpcore", "Displays the PvPCore Menu to the sender.", "Usage: /pvpcore", ["pvpcoremenu", "kbmenu", "pvpmenu"]);
+        parent::__construct("editWorld", "Sends the edit world Knockback form to the player.", "Usage: /editWorld", ["editworld", "editworldkb"]);
         parent::setPermission("pvpcore.permission.edit");
     }
 
@@ -27,8 +35,7 @@ class PvPCoreCommand extends Command
      * @param string[] $args
      *
      * @return mixed
-     *
-     * Executes the command.
+     * @throws CommandException
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
@@ -43,7 +50,12 @@ class PvPCoreCommand extends Command
             return true;
         }
 
-        $form = PvPCoreForms::getPvPCoreMenu($sender);
+        $form = PvPCoreForms::getWorldMenu(
+            $sender,
+            PvPCore::getWorldHandler()->getWorld($sender->getLevel()),
+            false
+        );
+
         $sender->sendForm($form);
         return true;
     }

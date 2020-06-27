@@ -51,6 +51,7 @@ class WorldHandler
     private function initWorlds(): void
     {
         if (!file_exists($this->path)) {
+
             $file = fopen($this->path, "w");
             fclose($file);
 
@@ -76,6 +77,11 @@ class WorldHandler
         }
 
         $contents = json_decode(file_get_contents($this->path), true);
+        if(!is_array($contents))
+        {
+            return;
+        }
+
         foreach ($contents as $worldName => $data) {
             $decoded = PvPCWorld::decode($worldName, $data);
             if ($decoded !== null) {
@@ -155,23 +161,12 @@ class WorldHandler
      */
     public function save(): void
     {
-        // TODO
-    }
+        $worlds = [];
+        foreach($this->worlds as $world)
+        {
+            $worlds[$world->getLocalizedLevel()] = $world->toArray();
+        }
 
-    /**
-     * @param PvPCWorld $world
-     *
-     * Updates the world to the world handler.
-     */
-    public function updateWorld(PvPCWorld $world): void
-    {
-        /* $map = $world->toMap();
-        $name = $world->getLevel()->getName();
-        $worlds = $this->config->get("worlds");
-        if(is_array($worlds) and key_exists($name, $worlds)){
-            $worlds[$name] = $map;
-            $this->config->set("worlds", $worlds);
-            $this->config->save();
-        } */
+        file_put_contents($this->path, json_encode($worlds));
     }
 }

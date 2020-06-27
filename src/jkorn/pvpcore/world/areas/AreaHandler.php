@@ -13,12 +13,12 @@ namespace jkorn\pvpcore\world\areas;
 
 use jkorn\pvpcore\PvPCore;
 use jkorn\pvpcore\utils\PvPCKnockback;
-use pocketmine\level\Level;
-use pocketmine\level\Position;
+use jkorn\pvpcore\utils\Utils;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\Config;
+use pocketmine\utils\TextFormat;
 use stdClass;
 
 class AreaHandler
@@ -54,7 +54,7 @@ class AreaHandler
      */
     private function initAreas(string $dataFolder): void
     {
-        $this->areaFile = $dataFolder . "area.json";
+        $this->areaFile = $dataFolder . "areas.json";
 
         if(!file_exists($this->areaFile))
         {
@@ -79,6 +79,11 @@ class AreaHandler
         if($json)
         {
             $contents = json_decode(file_get_contents($file), true);
+            if(!is_array($contents))
+            {
+                return;
+            }
+
             foreach($contents as $areaName => $data)
             {
                 $area = PvPCArea::decode($areaName, $data);
@@ -95,7 +100,13 @@ class AreaHandler
                 return;
             }
 
-            $contents = yaml_parse_file($file)["areas"];
+            $contents = yaml_parse_file($file);
+            if(!isset($contents["area"]) || !is_array($contents["area"]))
+            {
+                return;
+            }
+
+            $contents = $contents["area"];
             foreach($contents as $name => $data)
             {
                 $area = PvPCArea::decodeLegacy($name, $data);
@@ -122,22 +133,23 @@ class AreaHandler
     }
 
     /**
-     * @param stdClass $info
-     * @param Level $level
+     * @param stdClass|null $info
      * @param string $name
+     * @param Player $player
      * @return bool - Returns true if the area is successfully created.
      *
      * Create an area based on the information and its name.
      */
-    public function createArea(stdClass $info, Level $level, string $name): bool
+    public function createArea(?stdClass $info, string $name, Player $player): bool
     {
         // Checks if area exists.
         if(isset($this->areas[$name]))
         {
+            $player->sendMessage(Utils::getPrefix() . TextFormat::RED . " The area already exists!");
             return false;
         }
 
-        if(isset($info->firstPos, $info->secondPos))
+        if($info instanceof stdClass && isset($info->firstPos, $info->secondPos))
         {
             /** @var Vector3 $firstPos */
             $firstPos = $info->firstPos;
@@ -146,31 +158,32 @@ class AreaHandler
 
             $area = new PvPCArea(
                 $name,
-                $level,
+                $player->getLevel(),
                 $firstPos,
                 $secondPos,
                 new PvPCKnockback()
             );
 
             $this->areas[$area->getName()] = $area;
-
             return true;
         }
 
+        $player->sendMessage(Utils::getPrefix() . TextFormat::RED . " Failed to create the area.");
         return false;
     }
 
     /**
-     * @param string $name
+     * @param PvPCArea &$area - Address to the area object.
      * @return bool - Returns true if area has been deleted.
      *
      * Deletes the area based on the name.
      */
-    public function deleteArea(string $name): bool
+    public function deleteArea(PvPCArea &$area): bool
     {
-        if(isset($this->areas[$name]))
+        if(isset($this->areas[$area->getName()]))
         {
-            unset($this->areas[$name]);
+            unset($this->areas[$area->getName()]);
+            $area = null;
             return true;
         }
 
@@ -211,24 +224,6 @@ class AreaHandler
         }
 
         return null;
-    }
-
-    /**
-     * @param string $name
-     * @param PvPCArea $area
-     *
-     * Updates a pvp area based on the name and area.
-     */
-    public function updateArea(string $name, PvPCArea $area): void
-    {
-        // TODO
-        /* $areas = $this->config->get("areas");
-
-        if(array_key_exists($name, $areas)) {
-            $areas[$name] = $area->toMap();
-            $this->config->set("areas", $areas);
-            $this->config->save();
-        } */
     }
 
     /**

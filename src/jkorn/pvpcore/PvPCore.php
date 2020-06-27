@@ -11,8 +11,9 @@ namespace jkorn\pvpcore;
  * Time: 16:01
  */
 
-use jkorn\pvpcore\commands\AreaCommand;
-use jkorn\pvpcore\commands\PvPCommand;
+use jkorn\pvpcore\commands\CreateAreaCommand;
+use jkorn\pvpcore\commands\EditWorldCommand;
+use jkorn\pvpcore\commands\PvPAreaCommand;
 use jkorn\pvpcore\commands\PvPCoreCommand;
 use jkorn\pvpcore\utils\Utils;
 use jkorn\pvpcore\world\areas\AreaHandler;
@@ -40,13 +41,8 @@ class PvPCore extends PluginBase
         // Loads all of the levels.
         Utils::loadLevels($this);
 
-        if (!self::$worldHandler instanceof WorldHandler) {
-            self::$worldHandler = new WorldHandler($this);
-        }
-
-        if (!self::$areaHandler instanceof AreaHandler) {
-            self::$areaHandler = new AreaHandler($this);
-        }
+        self::$worldHandler = new WorldHandler($this);
+        self::$areaHandler = new AreaHandler($this);
 
         new PvPCoreListener($this);
         $this->deleteConfig();
@@ -114,5 +110,8 @@ class PvPCore extends PluginBase
     private function initCommands()
     {
         Utils::registerCommand(new PvPCoreCommand());
+        Utils::registerCommand(new EditWorldCommand());
+        Utils::registerCommand(new CreateAreaCommand());
+        Utils::registerCommand(new PvPAreaCommand());
     }
 }

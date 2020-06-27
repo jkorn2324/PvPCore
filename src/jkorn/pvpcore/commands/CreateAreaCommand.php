@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: jkorn2324
+ * Date: 2020-06-26
+ * Time: 17:58
+ */
 
 declare(strict_types=1);
 
@@ -9,15 +15,16 @@ use jkorn\pvpcore\forms\PvPCoreForms;
 use jkorn\pvpcore\utils\Utils;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\command\utils\CommandException;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-class PvPCoreCommand extends Command
+class CreateAreaCommand extends Command
 {
 
     public function __construct()
     {
-        parent::__construct("pvpcore", "Displays the PvPCore Menu to the sender.", "Usage: /pvpcore", ["pvpcoremenu", "kbmenu", "pvpmenu"]);
+        parent::__construct("createArea", "Command used to create the PvPArea.", "Usage: /createArea", ["createarea", "areacreate", "createpvparea"]);
         parent::setPermission("pvpcore.permission.edit");
     }
 
@@ -27,8 +34,7 @@ class PvPCoreCommand extends Command
      * @param string[] $args
      *
      * @return mixed
-     *
-     * Executes the command.
+     * @throws CommandException
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
@@ -43,7 +49,7 @@ class PvPCoreCommand extends Command
             return true;
         }
 
-        $form = PvPCoreForms::getPvPCoreMenu($sender);
+        $form = PvPCoreForms::getCreateAreaForm($sender);
         $sender->sendForm($form);
         return true;
     }
