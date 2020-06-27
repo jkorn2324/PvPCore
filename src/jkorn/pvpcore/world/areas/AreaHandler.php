@@ -61,7 +61,7 @@ class AreaHandler
             $file = fopen($this->areaFile, "w");
             fclose($file);
 
-            $this->decodeAreas($dataFolder . "/config.yml", false);
+            $this->decodeAreas($dataFolder . "config.yml", false);
             return;
         }
 
@@ -101,12 +101,12 @@ class AreaHandler
             }
 
             $contents = yaml_parse_file($file);
-            if(!isset($contents["area"]) || !is_array($contents["area"]))
+            if(!isset($contents["areas"]) || !is_array($contents["areas"]))
             {
                 return;
             }
 
-            $contents = $contents["area"];
+            $contents = $contents["areas"];
             foreach($contents as $name => $data)
             {
                 $area = PvPCArea::decodeLegacy($name, $data);
