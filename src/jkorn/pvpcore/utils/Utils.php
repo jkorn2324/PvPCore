@@ -202,21 +202,6 @@ class Utils
     }
 
     /**
-     * @param string $s
-     * @param bool $isInteger
-     * @return bool
-     */
-    public static function canParse($s, bool $isInteger): bool
-    {
-        if(is_string($s))
-        {
-            return is_numeric($s);
-        }
-
-        return $isInteger ? is_int($s) : is_float($s);
-    }
-
-    /**
      * @return string
      *
      * Gets the prefix of the messages, returns title of the form.
