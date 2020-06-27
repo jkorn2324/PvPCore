@@ -13,7 +13,6 @@ namespace jkorn\pvpcore\player;
 use jkorn\pvpcore\PvPCore;
 use jkorn\pvpcore\utils\PvPCKnockback;
 use jkorn\pvpcore\utils\Utils;
-use jkorn\pvpcore\world\areas\PvPCArea;
 use pocketmine\entity\Attribute;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
