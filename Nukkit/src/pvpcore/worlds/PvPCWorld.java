@@ -9,6 +9,7 @@ import pvpcore.utils.PvPCKnockback;
 import pvpcore.utils.Utils;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class PvPCWorld implements IKnockbackObject {
 
@@ -170,6 +171,44 @@ public class PvPCWorld implements IKnockbackObject {
                         levelName,
                         (boolean)enabled,
                         knockback
+                );
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Decodes the PvPCWorld using the old format.
+     * @param levelName - The name of the corresponding level.
+     * @param object - The data containing the world.
+     * @return PvPCWorld if successful, null otherwise.
+     */
+    public static PvPCWorld decodeLegacy(String levelName, Object object)
+    {
+        if(
+                object instanceof HashMap
+                && ((HashMap) object).containsKey("attack-delay")
+                && ((HashMap) object).containsKey("knockback-xz")
+                && ((HashMap) object).containsKey("knockback-y")
+                && ((HashMap) object).containsKey("customkb")
+        )
+        {
+            Object attackDelay = ((HashMap) object).get("attack-delay");
+            Object verticalKB = ((HashMap) object).get("knockback-y");
+            Object horizontalKB = ((HashMap) object).get("knockback-xz");
+            Object enabled = ((HashMap) object).get("customkb");
+
+            if(
+                attackDelay instanceof Number
+                && horizontalKB instanceof Number
+                && verticalKB instanceof Number
+                && enabled instanceof Boolean
+            )
+            {
+                return new PvPCWorld(
+                        levelName,
+                        (boolean)enabled,
+                        new PvPCKnockback((float)horizontalKB, (float)verticalKB, (int)attackDelay)
                 );
             }
         }

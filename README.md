@@ -1,9 +1,9 @@
-# PvPCore - PMMP
-This is a plugin for the server software, PocketMine-MP, based on my PvPCore plugin for the server software, Nukkit.
+# PvPCore
+This is a plugin for PocketMine-MP and Nukkit. This repository migrates the old PvPCore nukkit repository with the PMMP repository. As such, it contains code that's compatible for both softwares.
 
 ## Table of Contents
 <!--ts-->
-* [PvPCore - PMMP](#gh-md-toc)
+* [PvPCore](#gh-md-toc)
    * [Table of Contents](#table-of-contents)
    * [Features](#features)
    * [Configuration](#configuration)
@@ -27,6 +27,8 @@ This plugin allows you to easily change the knockback the players take in a spec
 - [x] Multi-Version Support
 	- [x] 1.14.60 Support
 	- [x] 1.16.0 Support
+- [ ] Nukkit Support (Java)
+- [x] PocketMine Supper (php)
 
 ## Configuration
 Fortunately, it's now much easier to configure the Knockback as compared to previous versions of KitKB. Instead of using commands, users now utilize the pvpcore **form menu.**

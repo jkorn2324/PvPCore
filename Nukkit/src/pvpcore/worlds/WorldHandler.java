@@ -5,15 +5,15 @@ import cn.nukkit.Server;
 import cn.nukkit.level.Level;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 import pvpcore.PvPCore;
 import pvpcore.utils.Utils;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class WorldHandler {
@@ -56,7 +56,41 @@ public class WorldHandler {
             {
                 this.worldsFile.createNewFile();
 
-                // TODO: Get information from config file.
+                // Reads the file and gets the outputted data.
+                File configFile = new File(this.core.getDataFolder(), "config.yml");
+                if(!configFile.exists())
+                {
+                    return;
+                }
+
+                String content = cn.nukkit.utils.Utils.readFile(configFile);
+
+                // Dumps contents from yaml file and creates a hash map.
+                DumperOptions dumperOptions = new DumperOptions();
+                dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+
+                Yaml yaml = new Yaml(dumperOptions);
+                LinkedHashMap dataMap = yaml.loadAs(content, LinkedHashMap.class);
+
+                if(!dataMap.containsKey("levels"))
+                {
+                    return;
+                }
+
+                // Iterates through the levels map & decodes.
+                HashMap levelsMap = (HashMap) dataMap.get("levels");
+                for(Object levelName : levelsMap.keySet())
+                {
+                    Object value = levelsMap.get(levelName);
+                    if(levelName instanceof String)
+                    {
+                        PvPCWorld world = PvPCWorld.decodeLegacy((String) levelName, value);
+                        if(world != null)
+                        {
+                            this.worlds.put(world.getLevelName(), world);
+                        }
+                    }
+                }
                 return;
             }
 
@@ -184,129 +218,4 @@ public class WorldHandler {
 
         }
     }
-
-    /* public void add(PvPCWorld world)
-    {
-        Config config = core.getConfig();
-        ConfigSection section = new ConfigSection();
-        HashMap<String, Object> areaMap = PvPCore.getAreaHandler().toHashMap();
-        HashMap<String, Object> levelMap = toHashMap();
-        levelMap.put(world.getWorldName(), world.toHashMap());
-        section.set("areas", areaMap);
-        section.set("levels", levelMap);
-        config.setAll(section);
-        config.save();
-    }
-
-    public void update(PvPCWorld world)
-    {
-        Config cfg = core.getConfig();
-        ConfigSection section = new ConfigSection();
-        String name = world.getWorldName();
-        HashMap<String, Object> worldsMap = toHashMap(getWorlds(name));
-        worldsMap.put(world.getWorldName(), world.toHashMap());
-        HashMap<String, Object> areaMap = PvPCore.getAreaHandler().toHashMap();
-        section.set("levels", worldsMap);
-        section.set("areas", areaMap);
-        cfg.setAll(section);
-        cfg.save();
-    }
-
-    public PvPCWorld get(String name){
-
-        HashMap list = (HashMap) core.getConfig().get("levels");
-
-        PvPCWorld world = null;
-
-        for(Object v : list.keySet()){
-
-            String worldName = v + "";
-
-            if(worldName.equals(name)) {
-
-                Object value = list.get(v);
-
-                if (value instanceof HashMap) {
-
-                    HashMap object = (HashMap) value;
-                    int delay = -1;
-                    Float kbY = null, kbXZ = null;
-                    Boolean isCustomKB = null;
-
-                    if (object.containsKey("attack-delay")) {
-                        delay = (Integer)object.get("attack-delay");
-                    }
-                    if (object.containsKey("knockback-y")) {
-                        kbY = PvPCoreUtil.getKnockbackFromObj(object.get("knockback-y"));
-                    }
-                    if (object.containsKey("knockback-xz")) {
-                        kbXZ = PvPCoreUtil.getKnockbackFromObj(object.get("knockback-xz"));
-                    }
-                    if (object.containsKey("customkb")) {
-                        isCustomKB = (boolean) object.get("customkb");
-                    }
-
-                    if (kbY != null && kbXZ != null && isCustomKB != null && delay != -1) {
-                        world = new PvPCWorld(isCustomKB, worldName, delay, new float[]{kbY, kbXZ});
-                    }
-                }
-                break;
-            }
-        }
-        return world;
-    }
-
-    private ArrayList<PvPCWorld> getWorlds(String update)
-    {
-        Config config = core.getConfig();
-        HashMap list = (HashMap)config.get("levels");
-        ArrayList<PvPCWorld> worlds = new ArrayList<>();
-        for(Object key : list.keySet()){
-            String name = key + "";
-            if(!name.contains(".")){
-                boolean exec = true;
-                if(update != null){
-                    if(name.equalsIgnoreCase(update)){
-                        exec = false;
-                    }
-                }
-                if(exec) {
-                    PvPCWorld world = get(name);
-                    if (world != null) worlds.add(world);
-                }
-            }
-        }
-        return worlds;
-    }
-
-    private HashMap<String, Object> toHashMap(ArrayList<PvPCWorld> worlds)
-    {
-        HashMap<String, Object> map = new HashMap<>();
-        for(PvPCWorld w : worlds){
-            map.put(w.getWorldName(), w.toHashMap());
-        }
-        return map;
-    }
-
-    public HashMap<String, Object> toHashMap(){
-        HashMap<String, Object> map = new HashMap<>();
-        for(PvPCWorld w : getWorlds()){
-            map.put(w.getWorldName(), w.toHashMap());
-        }
-        return map;
-    }
-
-    public ArrayList<PvPCWorld> getWorlds(){
-        return getWorlds(null);
-    }
-
-
-    public boolean doesWorldExist(String name){
-        PvPCWorld world = get(name);
-        return world != null;
-    }
-
-    /* public PvPCWorld createDefault(String name){
-        return new PvPCWorld(false, name, PvPCoreUtil.DEFAULT_ATTACK_DELAY, new float[]{0.4f, 0.4f});
-    } */
 }

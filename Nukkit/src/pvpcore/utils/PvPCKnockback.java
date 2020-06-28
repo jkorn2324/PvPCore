@@ -121,9 +121,9 @@ public class PvPCKnockback implements IExportedObject {
 
             // Checks whether or not the PvP Knockback value could be decoded.
             if(
-                    horizontalKB instanceof Double
-                    && verticalKB instanceof Double
-                    && speedKB instanceof Integer
+                    horizontalKB instanceof Number
+                    && verticalKB instanceof Number
+                    && speedKB instanceof Number
             )
             {
                 return new PvPCKnockback(
