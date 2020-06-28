@@ -167,6 +167,7 @@ class WorldHandler
                 $worlds[] = $pvpCWorld;
             }
         }
+
         return $worlds;
     }
 
