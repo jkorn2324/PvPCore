@@ -130,8 +130,40 @@ public class PvPCArea implements IKnockbackObject {
     @Override
     public boolean canUseKnockback(Player player, Player attacker)
     {
-        // TODO: Determine if the player can use the knockback.
-        return false;
+        if(this.level == null || !this.enabled)
+        {
+            return false;
+        }
+
+        Level player1Level = player.getLevel();
+        if(
+                !Utils.levelsEqual(player1Level, attacker.getLevel())
+                || !Utils.levelsEqual(player1Level, this.level)
+        )
+        {
+            return false;
+        }
+
+        return this.isWithinArea(player) && this.isWithinArea(attacker);
+    }
+
+    /**
+     * Determines whether the position is within the provided area.
+     * @param position - The input position.
+     * @return - True if the position is within the area, false otherwise.
+     */
+    private boolean isWithinArea(Vector3 position)
+    {
+        double minX = (double) Utils.getMinValue(this.firstPosition.x, this.secondPosition.x);
+        double maxX = (double) Utils.getMaxValue(this.firstPosition.x, this.secondPosition.x);
+        double minY = (double) Utils.getMinValue(this.firstPosition.y, this.secondPosition.y);
+        double maxY = (double)Utils.getMaxValue(this.firstPosition.y, this.secondPosition.y);
+        double minZ = (double)Utils.getMinValue(this.firstPosition.z, this.secondPosition.z);
+        double maxZ = (double) Utils.getMaxValue(this.firstPosition.z, this.secondPosition.z);
+
+        return position.x >= minX && position.x <= maxX
+                && position.y >= minY && position.y <= maxX
+                && position.z >= minZ && position.z <= maxZ;
     }
 
     /**
@@ -165,5 +197,27 @@ public class PvPCArea implements IKnockbackObject {
         return false;
     }
 
-    // TODO: Decode, DecodeLegacy, etc..
+    /**
+     * Decodes the data into a new PvPCArea instance.
+     * @param name - The name of the PvPArea.
+     * @param data - The data value of the PvPArea.
+     * @return - Null if unsuccessful, PvPCArea instance otherwise.
+     */
+    public static PvPCArea decode(String name, Object data)
+    {
+        // TODO
+        return null;
+    }
+
+    /**
+     * Decodes the data into a new PvPCArea instance based on legacy format.
+     * @param name - The name of the PvPArea.
+     * @param data - The data value of the PvPArea.
+     * @return - Null if unsuccessful, PvPCArea instance otherwise.
+     */
+    public static PvPCArea decodeLegacy(String name, Object data)
+    {
+        // TODO:
+        return null;
+    }
 }

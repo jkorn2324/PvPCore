@@ -1,244 +1,231 @@
 package pvpcore.worlds.areas;
 
 import cn.nukkit.Player;
-import cn.nukkit.level.Position;
-import cn.nukkit.utils.Config;
-import cn.nukkit.utils.ConfigSection;
+import cn.nukkit.Server;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
-import pvpcore.PvPCore;
-import pvpcore.misc.PvPCoreUtil;
-import pvpcore.worlds.PvPCWorld;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import pvpcore.PvPCore;
+import pvpcore.utils.Utils;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AreaHandler {
 
-    private PvPCore p;
+    /**
+     * The PvPCore class accessor.
+     */
+    private PvPCore core;
+    /**
+     * The Server accessor.
+     */
+    private Server server;
 
-    public AreaHandler(PvPCore a){
-        p = a;
+    /**
+     * The areas json file.
+     */
+    private File areaFile;
+    /**
+     * The areas concurrent hash map.
+     */
+    private ConcurrentHashMap<String, PvPCArea> areas;
+
+    /**
+     * The AreaHandler constructor.
+     *
+     * @param core - The PvPCore class.
+     */
+    public AreaHandler(PvPCore core) {
+        this.core = core;
+        this.server = core.getServer();
+
+        this.areas = new ConcurrentHashMap<>();
+
+        this.areaFile = new File(core.getDataFolder(), "areas.json");
+        this.init();
     }
 
-    public void add(PvPCArea area){
-        Config config = p.getConfig();
-        ConfigSection section = new ConfigSection();
-        HashMap<String, Object> areaMap = toHashMap();
-        areaMap.put(area.getName(), area.toMap());
-        HashMap<String, Object> levelMap = PvPCore.worldHandler.toHashMap();
-        section.set("areas", areaMap);
-        section.set("levels", levelMap);
-        config.setAll(section);
-        config.save();
-        /*p.getConfig().set("areas." + world.getWorldName(), world.toHashMap());
-        p.getConfig().save();*/
-    }
+    /**
+     * Initializes the areas to the ConcurrentHashMap.
+     */
+    private void init() {
+        try {
+            if (!this.areaFile.exists()) {
+                this.areaFile.createNewFile();
 
-    public ArrayList<PvPCArea> getAreas(){
-        return getAreas(null);
-    }
-
-    private ArrayList<PvPCArea> getAreas(String s){
-        ArrayList<PvPCArea> list = new ArrayList<>();
-        HashMap map = (HashMap)p.getConfig().get("areas");
-        for(Object o : map.keySet()){
-            String name = o + "";
-            boolean b = true;
-
-            if(s != null){
-                if(s.equalsIgnoreCase(name)){
-                    b = false;
-                }
-            }
-
-            if(b){
-                if(doesAreaExist(name)){
-                    PvPCArea area = getAreaByName(name);
-                    list.add(area);
-                }
-            }
-        }
-        return list;
-    }
-
-    public PvPCArea getAreaByName(String name){
-
-        PvPCArea area = null;
-
-        HashMap theMap = (HashMap)p.getConfig().get("areas");
-
-        if(theMap.containsKey(name)) {
-
-            HashMap map = (HashMap)theMap.get(name);
-
-            String[] keys = PvPCArea.getKeys().clone();
-
-            Float xKB = null, yKB = null;
-
-            Position firstPos = null, secondPos = null;
-
-            Integer attackDel = null;
-
-            Boolean isEnabled = null;
-
-            String world = null;
-
-            if (map.containsKey(keys[0])) {
-                xKB = PvPCoreUtil.getKnockbackFromObj(map.get(keys[0]));
-            }
-
-            if (map.containsKey(keys[1])) {
-                yKB = PvPCoreUtil.getKnockbackFromObj(map.get(keys[1]));
-            }
-
-            if (map.containsKey(keys[2])) {
-                firstPos = PvPCoreUtil.readPosFrom(map.get(keys[2]));
-            }
-
-            if (map.containsKey(keys[3])) {
-                secondPos = PvPCoreUtil.readPosFrom(map.get(keys[3]));
-            }
-
-            if (map.containsKey(keys[4]) && map.get(keys[4]) instanceof Integer) {
-                attackDel = (Integer) map.get(keys[4]);
-            }
-
-            if (map.containsKey(keys[5]) && map.get(keys[5]) instanceof Boolean) {
-                isEnabled = (Boolean) map.get(keys[5]);
-            }
-
-            if (map.containsKey(keys[6])) {
-                world = map.get(keys[6]) + "";
-            }
-
-            if (xKB != null && yKB != null && firstPos != null && secondPos != null && attackDel != null && isEnabled != null && world != null) {
-                area = new PvPCArea(name, xKB.doubleValue(), yKB.doubleValue(), firstPos, secondPos).setAreaKBEnabled(isEnabled).setAttackDelay(attackDel).setWorld(world);
-            }
-        }
-        return area;
-    }
-
-    public boolean doesAreaExist(String name){
-        return getAreaByName(name) != null;
-    }
-
-    public void update(PvPCArea area){
-        Config config = p.getConfig();
-        ConfigSection section = new ConfigSection();
-        String name = area.getName();
-        HashMap<String, Object> areaMap = toHashMap(getAreas(name));
-        areaMap.put(area.getName(), area.toMap());
-        HashMap<String, Object> levelMap = PvPCore.worldHandler.toHashMap();
-        section.set("areas", areaMap);
-        section.set("levels", levelMap);
-        config.setAll(section);
-        config.save();
-    }
-
-    public void delete(PvPCArea area){
-        Config config = p.getConfig();
-        ConfigSection section = new ConfigSection();
-        String name = area.getName();
-        HashMap<String, Object> areaMap = toHashMap(getAreas(name));
-        HashMap<String, Object> levelMap = PvPCore.worldHandler.toHashMap();
-        section.set("areas", areaMap);
-        section.set("levels", levelMap);
-        config.setAll(section);
-        config.save();
-    }
-
-    public HashMap<String, Object> toHashMap(ArrayList<PvPCArea> list){
-        HashMap<String, Object> map = new HashMap<>();
-        for(PvPCArea area : list){
-            map.put(area.getName(), area.toMap());
-        }
-        return map;
-    }
-
-    public HashMap<String, Object> toHashMap(){
-        HashMap<String, Object> map = new HashMap<>();
-        for(PvPCArea area : getAreas()){
-            map.put(area.getName(), area.toMap());
-        }
-        return map;
-    }
-
-    public PvPCArea getAreaFrom(Player...players){
-        int len = players.length;
-        PvPCArea area = null;
-        if(len != 0) {
-            if (len == 1) {
-                Player p = players[0];
-                if (isPlayerInArea(p)) {
-                    area = getAreaAtPos(p);
-                }
-            } else {
-                Player p = players[0];
-                if(isPlayerInArea(p)){
-                    area = getAreaAtPos(p);
+                File configFile = new File(this.core.getDataFolder(), "config.yml");
+                if (!configFile.exists()) {
+                    return;
                 }
 
-                if(area != null) {
-                    for (int i = 1; i < players.length; i++) {
-                        Player pl = players[i];
-                        if (pl != null && isPlayerInArea(pl)) {
-                            PvPCArea theArea = getAreaAtPos(pl);
-                            if (!theArea.equals(area)) {
-                                area = null;
-                                break;
-                            }
+                // Reads the content from the Yaml.
+                String content = cn.nukkit.utils.Utils.readFile(configFile);
+
+                DumperOptions options = new DumperOptions();
+                options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+
+                Yaml yaml = new Yaml(options);
+                LinkedHashMap dataMap = yaml.loadAs(content, LinkedHashMap.class);
+
+                if (!dataMap.containsKey("areas")) {
+                    return;
+                }
+
+                HashMap areasMap = (HashMap) dataMap.get("areas");
+                for (Object areaName : areasMap.keySet()) {
+                    Object value = areasMap.get(areaName);
+                    if (areaName instanceof String) {
+                        PvPCArea area = PvPCArea.decodeLegacy((String) areaName, value);
+                        if (area != null) {
+                            this.areas.put(area.getName(), area);
                         }
                     }
                 }
+                return;
             }
-        }
-        return area;
-    }
 
-    public boolean isPlayerInArea(Player p){
-        return getAreaAtPos(p) != null;
-    }
+            FileReader reader = new FileReader(this.areaFile);
+            JSONParser parser = new JSONParser();
 
-    public PvPCArea getAreaAtPos(Player...players){
-        PvPCArea res = null;
-        for(Player player : players) {
-            for (PvPCArea area : getAreas()) {
-                if (area.isPlayerWithinBounds(player)) {
-                    res = area;
-                    break;
+            // Decodes the areas data from the JSON file and stores them in the concurrent hashmap.
+            Object areasData = parser.parse(reader);
+            if (areasData instanceof JSONObject) {
+                Iterator iterator = ((JSONObject) areasData).keySet().iterator();
+                while (iterator.hasNext()) {
+                    String areaName = (String) iterator.next();
+                    Object worldData = ((JSONObject) areasData).get(areaName);
+                    PvPCArea area = PvPCArea.decode(areaName, worldData);
+                    if (area != null) {
+                        this.areas.put(area.getName(), area);
+                    }
                 }
             }
+            reader.close();
+
+        } catch (Exception e) {
+            // TODO: Print
         }
-        return res;
     }
 
-    public boolean arePlayersInSameArea(Player...players) {
-        return getAreaFrom(players) != null;
+    /**
+     * Gets the PvPCArea from the name.
+     *
+     * @param name - The String name of the area.
+     * @return - The PvPCArea if it exists, null otherwise.
+     */
+    public PvPCArea getArea(String name) {
+        if (this.areas.containsKey(name)) {
+            return this.areas.get(name);
+        }
+
+        return null;
     }
 
-    public boolean hasWorld(PvPCArea area) {
-        String world = area.getWorld();
-        return PvPCore.worldHandler.doesWorldExist(world);
-    }
-
-    public PvPCWorld getWorld(PvPCArea area){
-        return PvPCore.worldHandler.get(area.getWorld());
-    }
-
-    public String listAreas() {
-
-        String areaList = TextFormat.GOLD + "Area List" + TextFormat.GRAY + ": " + TextFormat.RESET;
-
-        int len = getAreas().size() - 1, count = 0;
-        for(PvPCArea area : getAreas()){
-            String comma = TextFormat.GRAY + ", " + TextFormat.BLUE;
-            if(count == len){
-                comma = "";
+    /**
+     * Gets the area knockback from two players.
+     *
+     * @param player1 - The first player.
+     * @param player2 - The second player.
+     * @return - PvPCArea if players are within it, otherwise null.
+     */
+    public PvPCArea getAreaKnockback(Player player1, Player player2) {
+        for (PvPCArea area : this.areas.values()) {
+            if (area.canUseKnockback(player1, player2)) {
+                return area;
             }
-            String areaName = TextFormat.BLUE + area.getName() + comma;
-            areaList += areaName;
-            count++;
         }
-        return areaList;
+        return null;
+    }
+
+    /**
+     * Creates a new area if the player contains all of the given information.
+     *
+     * @param map    - The input map containing all the information.
+     * @param name   - The name of the area.
+     * @param player - The player that is creating the area.
+     * @return - true if the player successfully created the area, false otherwise.
+     */
+    public boolean createArea(Map map, String name, Player player) {
+        if (this.areas.containsKey(name)) {
+            player.sendMessage(Utils.getPrefix() + TextFormat.RED.toString() + " The area already exists!");
+            return false;
+        }
+
+        if (
+                map != null
+                        && map.containsKey("firstPos")
+                        && map.containsKey("secondPos")
+        ) {
+            Object firstPos = map.get("firstPos");
+            Object secondPos = map.get("secondPos");
+            if (firstPos instanceof Vector3 && secondPos instanceof Vector3) {
+                PvPCArea area = new PvPCArea(
+                        name,
+                        player.getLevel(),
+                        (Vector3) firstPos,
+                        (Vector3) secondPos
+                );
+                this.areas.put(area.getName(), area);
+                return true;
+            }
+        }
+
+        player.sendMessage(Utils.getPrefix() + TextFormat.RED + " Failed to create the area.");
+        return false;
+    }
+
+    /**
+     * Deletes the input area object.
+     * @param area - The input area object.
+     * @return - true if deletion is successful, not true otherwise.
+     */
+    public boolean deleteArea(PvPCArea area)
+    {
+        if(this.areas.containsKey(area.getName()))
+        {
+            this.areas.remove(area.getName());
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets the areas in the collection.
+     * @return - The areas.
+     */
+    public Collection<PvPCArea> getAreas()
+    {
+        return this.areas.values();
+    }
+
+    /**
+     * Saves the area to the file.
+     */
+    public void save()
+    {
+        try
+        {
+            JSONObject object = new JSONObject();
+            for(PvPCArea area : this.areas.values())
+            {
+                object.put(area.getName(), area.export());
+            }
+            FileWriter writer = new FileWriter(this.areaFile);
+            object.writeJSONString(writer);
+            writer.close();
+
+        } catch (Exception e)
+        {
+            // TODO: Print
+        }
     }
 }

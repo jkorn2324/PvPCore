@@ -3,6 +3,7 @@ package pvpcore.worlds;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.level.Level;
+import cn.nukkit.math.Vector3;
 import org.json.simple.JSONObject;
 import pvpcore.utils.IKnockbackObject;
 import pvpcore.utils.PvPCKnockback;
@@ -113,8 +114,13 @@ public class PvPCWorld implements IKnockbackObject {
     @Override
     public boolean canUseKnockback(Player player, Player attacker)
     {
-        // TODO: Determine if the player can use the knockback.
-        return false;
+        if(this.level == null || !this.enabled)
+        {
+            return false;
+        }
+
+        return Utils.levelsEqual(player.getLevel(), this.level)
+                && Utils.levelsEqual(attacker.getLevel(), this.level);
     }
 
     /**

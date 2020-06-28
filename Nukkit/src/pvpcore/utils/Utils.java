@@ -5,6 +5,10 @@ import cn.nukkit.Server;
 import cn.nukkit.command.Command;
 import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
+import cn.nukkit.utils.TextFormat;
+import pvpcore.PvPCore;
+import pvpcore.worlds.PvPCWorld;
+import pvpcore.worlds.areas.PvPCArea;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +17,42 @@ import java.util.Map;
  * The Utils class. This contains all the useful functions.
  */
 public class Utils {
+
+    /**
+     * Gets the maximum value based on a list of values.
+     * @param values - The list of number values.
+     * @return - Number, the maximum value.
+     */
+    public static Number getMaxValue(Number...values)
+    {
+        Number maxNumber = null;
+        for(Number num : values)
+        {
+            if(maxNumber == null || maxNumber.doubleValue() < num.doubleValue())
+            {
+                maxNumber = num;
+            }
+        }
+        return maxNumber;
+    }
+
+    /**
+     * Gets the minimum value based on a list of values.
+     * @param values - The list of number values.
+     * @return - Number, the minimum value.
+     */
+    public static Number getMinValue(Number...values)
+    {
+        Number minNumber = null;
+        for(Number num : values)
+        {
+            if(minNumber == null || minNumber.doubleValue() > num.doubleValue())
+            {
+                minNumber = num;
+            }
+        }
+        return minNumber;
+    }
 
     /**
      * Converts the vector3 to a map object.
@@ -27,6 +67,7 @@ public class Utils {
         output.put("z", input.z);
         return output;
     }
+
 
     /**
      * Converts a map to a vector3 object.
@@ -68,9 +109,20 @@ public class Utils {
      * @param player2 - The player attacking player1.
      * @return PvPCKnockback or Null.
      */
-    public static PvPCKnockback getKnockback(Player player1, Player player2)
+    public static PvPCKnockback getKnockbackFor(Player player1, Player player2)
     {
-        // TODO
+        PvPCArea area = PvPCore.getAreaHandler().getAreaKnockback(player1, player2);
+        if(area != null)
+        {
+            return area.getKnockback();
+        }
+
+        PvPCWorld world = PvPCore.getWorldHandler().getWorldKnockback(player1, player2);
+        if(world != null)
+        {
+            return world.getKnockback();
+        }
+
         return null;
     }
 
@@ -127,4 +179,16 @@ public class Utils {
     {
         Server.getInstance().getCommandMap().register(command.getName(), command);
     }
+
+    /**
+     * Gets the prefix of the server name.
+     * @return - The String containing the prefix.
+     */
+    public static String getPrefix()
+    {
+        return TextFormat.BOLD.toString() + TextFormat.DARK_GRAY.toString() +
+                "[" + TextFormat.BLUE.toString() + "PvPCore" + TextFormat.DARK_GRAY.toString() +
+                "]" + TextFormat.RESET.toString();
+    }
+
 }

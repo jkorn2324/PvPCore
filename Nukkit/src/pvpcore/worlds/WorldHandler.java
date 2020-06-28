@@ -215,7 +215,7 @@ public class WorldHandler {
 
         } catch (Exception e)
         {
-
+            // TODO: Print exception.
         }
     }
 }

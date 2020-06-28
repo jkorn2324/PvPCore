@@ -1,15 +1,18 @@
 package pvpcore.player;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
-import cn.nukkit.level.Position;
+import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.SourceInterface;
 import pvpcore.utils.PvPCKnockback;
 import pvpcore.utils.Utils;
 
 public class PvPCorePlayer extends Player {
+
+
+    /** Determines whether the player is viewing a form. */
+    private boolean lookingAtForm = false;
 
     /**
      * The default PvPPlayer constructor.
@@ -37,7 +40,7 @@ public class PvPCorePlayer extends Player {
 
         if(attacker instanceof Player)
         {
-            PvPCKnockback knockback = Utils.getKnockback(this, (Player) attacker);
+            PvPCKnockback knockback = Utils.getKnockbackFor(this, (Player) attacker);
             if(knockback != null)
             {
                 xzKB = knockback.getHorizontalKB();
@@ -64,5 +67,52 @@ public class PvPCorePlayer extends Player {
 
             this.setMotion(motion);
         }
+    }
+
+    /**
+     * Sends the form window to the player, but checks whether or not the player is viewing a form.
+     * @param window - The Form Window input.
+     * @return - The input form window.
+     */
+    public int showFormWindow(FormWindow window)
+    {
+        int id = (this.lookingAtForm ? this.formWindowCount : this.formWindowCount++);
+        return this.showFormWindow(window, id);
+    }
+
+    /**
+     * Sends the form window to the player, but checks whether or not the player is viewing a form.
+     * @param window - The Form Window input.
+     * @param id - The form id.
+     * @return - The input form window id.
+     */
+    @Override
+    public int showFormWindow(FormWindow window, int id)
+    {
+        if(!this.lookingAtForm)
+        {
+            this.lookingAtForm = true;
+            return super.showFormWindow(window, id);
+        }
+
+        return id;
+    }
+
+    /**
+     * Determines whether or not the player is looking at a form.
+     * @param lookingAtForm - The looking at form input boolean.
+     */
+    public void setLookingAtForm(boolean lookingAtForm)
+    {
+        this.lookingAtForm = lookingAtForm;
+    }
+
+    /**
+     * Determines if the player is viewing a form.
+     * @return - True if looking at a form, false otherwise.
+     */
+    public boolean isLookingAtForm()
+    {
+        return this.lookingAtForm;
     }
 }

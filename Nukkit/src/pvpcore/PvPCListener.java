@@ -1,9 +1,13 @@
 package pvpcore;
 
+import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerCreationEvent;
+import cn.nukkit.event.player.PlayerFormRespondedEvent;
+import cn.nukkit.form.window.FormWindow;
+import pvpcore.forms.ICallbackForm;
 import pvpcore.player.PvPCorePlayer;
 
 public class PvPCListener implements Listener {
@@ -35,4 +39,27 @@ public class PvPCListener implements Listener {
         event.setPlayerClass(PvPCorePlayer.class);
     }
 
+    /**
+     * Called when the player receives a response from the form.
+     * @param event - The form response event.
+     */
+    @EventHandler
+    public void onFormResponse(PlayerFormRespondedEvent event)
+    {
+        // Updates the player's looking at form status.
+        Player player = event.getPlayer();
+        if(
+                player instanceof PvPCorePlayer
+                && ((PvPCorePlayer) player).isLookingAtForm()
+        )
+        {
+            ((PvPCorePlayer) player).setLookingAtForm(false);
+        }
+
+        FormWindow window = event.getWindow();
+        if(window instanceof ICallbackForm)
+        {
+            ((ICallbackForm) window).handleResponse(event.getPlayer(), event.getResponse());
+        }
+    }
 }
