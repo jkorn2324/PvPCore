@@ -4,12 +4,63 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.Command;
 import cn.nukkit.level.Level;
+import cn.nukkit.math.Vector3;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Utils class. This contains all the useful functions.
  */
 public class Utils {
 
+    /**
+     * Converts the vector3 to a map object.
+     * @param input - The input object.
+     * @return - A new hashmap object.
+     */
+    public static HashMap<String, Double> vec3ToMap(Vector3 input)
+    {
+        HashMap<String, Double> output = new HashMap<>();
+        output.put("x", input.x);
+        output.put("y", input.y);
+        output.put("z", input.z);
+        return output;
+    }
+
+    /**
+     * Converts a map to a vector3 object.
+     * @param map - The input map.
+     * @return - Vector3 or null if failed.
+     */
+    public static Vector3 mapToVec3(Map map)
+    {
+        if(
+                map.containsKey("x")
+                && map.containsKey("y")
+                && map.containsKey("z")
+        )
+        {
+            Object x = map.get("x");
+            Object y = map.get("y");
+            Object z = map.get("z");
+
+            if(
+                    x instanceof Number
+                    && y instanceof Number
+                    && z instanceof Number
+            )
+            {
+                return new Vector3(
+                        ((Number) x).doubleValue(),
+                        ((Number) y).doubleValue(),
+                        ((Number) z).doubleValue()
+                );
+            }
+        }
+
+        return null;
+    }
 
     /**
      * Gets the knockback of the player based on level and area.

@@ -10,6 +10,7 @@ import pvpcore.utils.Utils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class PvPCWorld implements IKnockbackObject {
 
@@ -157,7 +158,7 @@ public class PvPCWorld implements IKnockbackObject {
     public static PvPCWorld decode(String levelName, Object object)
     {
         if(
-                object instanceof JSONObject
+                object instanceof Map
                 && ((JSONObject) object).containsKey("kbEnabled")
                 && ((JSONObject) object).containsKey("kbInfo")
         )
@@ -186,17 +187,17 @@ public class PvPCWorld implements IKnockbackObject {
     public static PvPCWorld decodeLegacy(String levelName, Object object)
     {
         if(
-                object instanceof HashMap
+                object instanceof Map
                 && ((HashMap) object).containsKey("attack-delay")
                 && ((HashMap) object).containsKey("knockback-xz")
                 && ((HashMap) object).containsKey("knockback-y")
                 && ((HashMap) object).containsKey("customkb")
         )
         {
-            Object attackDelay = ((HashMap) object).get("attack-delay");
-            Object verticalKB = ((HashMap) object).get("knockback-y");
-            Object horizontalKB = ((HashMap) object).get("knockback-xz");
-            Object enabled = ((HashMap) object).get("customkb");
+            Object attackDelay = ((Map) object).get("attack-delay");
+            Object verticalKB = ((Map) object).get("knockback-y");
+            Object horizontalKB = ((Map) object).get("knockback-xz");
+            Object enabled = ((Map) object).get("customkb");
 
             if(
                 attackDelay instanceof Number
@@ -205,10 +206,10 @@ public class PvPCWorld implements IKnockbackObject {
                 && enabled instanceof Boolean
             )
             {
-                return new PvPCWorld(
-                        levelName,
-                        (boolean)enabled,
-                        new PvPCKnockback((float)horizontalKB, (float)verticalKB, (int)attackDelay)
+                return new PvPCWorld(levelName, (boolean)enabled, new PvPCKnockback(
+                                ((Number) horizontalKB).floatValue(),
+                                ((Number) verticalKB).floatValue(),
+                                ((Number) attackDelay).intValue())
                 );
             }
         }
