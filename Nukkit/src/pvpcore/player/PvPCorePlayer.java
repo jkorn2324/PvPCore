@@ -2,8 +2,12 @@ package pvpcore.player;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.level.Position;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.network.SourceInterface;
+import pvpcore.utils.PvPCKnockback;
+import pvpcore.utils.Utils;
 
 public class PvPCorePlayer extends Player {
 
@@ -19,67 +23,46 @@ public class PvPCorePlayer extends Player {
         super(interfaz, clientID, ip, port);
     }
 
-    /* private String player;
+    /**
+     * Forces the player to take knockback, overriden to account for PvPAreas.
+     * @param attacker - The Entity attacking the player.
+     * @param damage - The amount of damage dealt.
+     * @param x - The x coordinate.
+     * @param z - The y coordinate.
+     * @param base - The base knockback.
+     */
+    public void knockBack(Entity attacker, double damage, double x, double z, double base)
+    {
+        double xzKB = base, yKB = base;
 
-    private int damageDelay;
-
-    public PvPPlayer(String name){
-        this(name, 0);
-    }
-
-    public PvPPlayer(Player p){
-        this(p, 0);
-    }
-
-    public PvPPlayer(String name, int time) {
-        damageDelay = time;
-        player = name;
-    }
-
-    public PvPPlayer(Player player, int time) {
-        this.player = player.getName();
-        damageDelay = time;
-    }
-
-    public void removeTick(int a){
-        damageDelay -= a;
-    }
-
-    public void setNoDamageTicks(int a){
-        damageDelay = a;
-    }
-
-    public int getNoDamageTicks(){
-        return damageDelay;
-    }
-
-    public boolean canBeHit(){
-        boolean result = false;
-        if(isOnline()){
-            Player p = getPlayer();
-            if(!p.isCreative() && Server.getInstance().getPropertyBoolean("pvp")){
-                if(damageDelay <= 0){
-                    result = true;
-                }
+        if(attacker instanceof Player)
+        {
+            PvPCKnockback knockback = Utils.getKnockback(this, (Player) attacker);
+            if(knockback != null)
+            {
+                xzKB = knockback.getHorizontalKB();
+                yKB = knockback.getVerticalKB();
             }
         }
-        return result;
-    }
 
-    public Player getPlayer(){
-        return Server.getInstance().getPlayer(player);
-    }
+        double f = Math.sqrt(x * x + z * z);
+        if (f > 0.0D)
+        {
+            f = 1.0D / f;
+            Vector3 motion = new Vector3(this.motionX, this.motionY, this.motionZ);
+            motion.x /= 2.0D;
+            motion.y /= 2.0D;
+            motion.z /= 2.0D;
+            motion.x += x * f * xzKB;
+            motion.y += yKB;
+            motion.z += z * f * xzKB;
 
-    public boolean isOnline(){
-        boolean result = false;
-        if(getPlayer() != null){
-            Player p = getPlayer();
-            result = p.isOnline();
+            if (motion.y > base)
+            {
+                motion.y = base;
+            }
+
+            this.setMotion(motion);
         }
-        return result;
     }
-
-    public Position getPosition(){
-        return getPlayer().getPosition();
-    } */
 }

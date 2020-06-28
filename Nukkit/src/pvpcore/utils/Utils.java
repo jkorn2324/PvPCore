@@ -1,5 +1,6 @@
 package pvpcore.utils;
 
+import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.Command;
 import cn.nukkit.level.Level;
@@ -8,6 +9,19 @@ import cn.nukkit.level.Level;
  * The Utils class. This contains all the useful functions.
  */
 public class Utils {
+
+
+    /**
+     * Gets the knockback of the player based on level and area.
+     * @param player1 - The player being attacked.
+     * @param player2 - The player attacking player1.
+     * @return PvPCKnockback or Null.
+     */
+    public static PvPCKnockback getKnockback(Player player1, Player player2)
+    {
+        // TODO
+        return null;
+    }
 
 
     /**
@@ -62,6 +76,4 @@ public class Utils {
     {
         Server.getInstance().getCommandMap().register(command.getName(), command);
     }
-
-
 }

@@ -4,7 +4,6 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.plugin.PluginBase;
 import pvpcore.commands.AreaCommand;
 import pvpcore.commands.PvPCommand;
-import pvpcore.misc.PvPCListener;
 import pvpcore.utils.Utils;
 import pvpcore.worlds.WorldHandler;
 import pvpcore.worlds.areas.AreaHandler;
