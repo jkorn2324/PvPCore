@@ -108,6 +108,7 @@ class PvPCore extends PluginBase
         }
     }
 
+
     /**
      * Initializes all of the commands.
      */
