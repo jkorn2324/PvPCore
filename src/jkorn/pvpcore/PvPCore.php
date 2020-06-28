@@ -24,6 +24,10 @@ use jkorn\pvpcore\world\WorldHandler;
 class PvPCore extends PluginBase
 {
 
+    // TODO FIX THESE BUGS:
+    // - Loading all levels.
+    // - Attack Speed not working.
+
     /** @var PvPCore */
     private static $instance;
 

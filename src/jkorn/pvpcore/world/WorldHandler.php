@@ -6,6 +6,7 @@ namespace jkorn\pvpcore\world;
 
 use jkorn\pvpcore\PvPCore;
 use jkorn\pvpcore\utils\PvPCKnockback;
+use jkorn\pvpcore\utils\Utils;
 use pocketmine\level\Level;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -100,9 +101,17 @@ class WorldHandler
     {
         if ($level instanceof Level) {
             if (!isset($this->worlds[$levelName = $level->getName()])) {
-                $this->worlds[$levelName] = new PvPCWorld($levelName, true, new PvPCKnockback());
+                $this->worlds[$levelName] = $world = new PvPCWorld($levelName, true, new PvPCKnockback());
+                return $world;
             }
-            return $this->worlds[$levelName];
+
+            $world = $this->worlds[$levelName];
+            $wLevel = $world->getLevel();
+            if($wLevel === null)
+            {
+                $world->setLevel($level);
+            }
+            return $world;
         } elseif (is_string($level)) {
             $loaded = true;
             if (!$this->server->isLevelLoaded($level)) {
@@ -132,6 +141,11 @@ class WorldHandler
             {
                 return $world;
             }
+        }
+
+        if(Utils::areLevelsEqual($level = $player1->getLevel(), $player2->getLevel()))
+        {
+            return $this->getWorld($level);
         }
 
         return null;

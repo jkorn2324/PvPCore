@@ -67,6 +67,18 @@ class PvPCWorld implements IKBObject
     }
 
     /**
+     * @param Level $level
+     *
+     * Called to reload the level information.
+     */
+    public function setLevel(Level $level): void
+    {
+        $this->localizedLevel = $level->getName();
+        $this->level = $level;
+    }
+
+
+    /**
      * @return bool
      *
      * Determines if the KB is enabled or not.
@@ -142,9 +154,8 @@ class PvPCWorld implements IKBObject
             return false;
         }
 
-        $level = $player1->getLevel();
-        return Utils::areLevelsEqual($level, $player2->getLevel())
-            && Utils::areLevelsEqual($level, $this->level);
+        return Utils::areLevelsEqual($player1->getLevel(), $this->level)
+            && Utils::areLevelsEqual($player2->getLevel(), $this->level);
     }
 
     /**

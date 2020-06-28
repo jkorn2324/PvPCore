@@ -150,7 +150,8 @@ class Utils
     public static function loadLevels(?PvPCore $core = null): void
     {
         $core = $core ?? PvPCore::getInstance();
-        if(($index = strpos("/plugin_data", $dataFolder = $core->getDataFolder())) === false)
+        $index = strpos($dataFolder = $core->getDataFolder(), "/plugin_data");
+        if($index === false)
         {
             return;
         }
