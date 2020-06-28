@@ -1,0 +1,38 @@
+name: PvPCore
+author: "jkorn"
+main: pvpcore.PvPCore
+version: "1.0"
+website: "https://github.com/jkorn2324"
+api: ["1.0.0"]
+
+permissions:
+  pvpcore.permission.pvp:
+    description: "Allows players to run pvp commands."
+    default: true
+  pvpcore.permission.pvp.help:
+    description: "Allows players to run the /pvp help command."
+    default: true
+  pvpcore.permission.pvp.set:
+    description: "Allows players to run the /pvp set command."
+    default: op
+  pvpcore.permission.pvp.enable:
+    description: "Allows players to run the /pvp enable command."
+    default: op
+  pvpcore.permission.pvp.disable:
+    description: "Allows players to run the /pvp disable command."
+    default: op
+  pvpcore.permission.area:
+    description: "Allows player to run area commands."
+    default: true
+  pvpcore.permission.area.help:
+    description: "Allows players to run the /area help command."
+    default: true
+  pvpcore.permission.area.create:
+    description: "Allows players to run the /area create command."
+    default: op
+  pvpcore.permission.area.delete:
+    description: "Allows players to run the /area delete command."
+    default: op
+  pvpcore.permission.area.pos:
+    description: "Allows players to run the /area setpos command."
+    default: op
