@@ -17,15 +17,11 @@ use jkorn\pvpcore\utils\Utils;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\Server;
-use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use stdClass;
 
 class AreaHandler
 {
-
-    /* @var Config */
-    // private $config;
 
     /** @var PvPCArea[] */
     private $areas;

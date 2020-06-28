@@ -142,10 +142,7 @@ class PvPCPlayer extends Player
         }
 
         $attackSpeed = $source->getAttackCooldown();
-        if (
-            $source instanceof EntityDamageByEntityEvent
-            && ($cause = $source->getCause()) === EntityDamageEvent::CAUSE_ENTITY_ATTACK
-        ) {
+        if ($source instanceof EntityDamageByEntityEvent) {
             $damager = $source->getDamager();
             if ($damager instanceof Player) {
                 $knockback = Utils::getKnockbackFor($this, $damager);
