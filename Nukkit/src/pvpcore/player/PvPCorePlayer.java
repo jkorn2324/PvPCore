@@ -5,14 +5,20 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.SourceInterface;
+import cn.nukkit.utils.TextFormat;
+import pvpcore.PvPCore;
 import pvpcore.utils.PvPCKnockback;
 import pvpcore.utils.Utils;
+
+import java.util.HashMap;
 
 public class PvPCorePlayer extends Player {
 
 
     /** Determines whether the player is viewing a form. */
     private boolean lookingAtForm = false;
+    /** Stores the area information for the player. */
+    private HashMap<String, Object> areaInfo;
 
     /**
      * The default PvPPlayer constructor.
@@ -24,6 +30,47 @@ public class PvPCorePlayer extends Player {
     public PvPCorePlayer(SourceInterface interfaz, Long clientID, String ip, int port)
     {
         super(interfaz, clientID, ip, port);
+        this.areaInfo = new HashMap<>();
+    }
+
+    /**
+     * Sets the first position in the area information.
+     */
+    public void setFirstPos()
+    {
+        this.areaInfo.put("firstPos", new Vector3(this.x, this.y, this.z));
+        this.sendMessage(Utils.getPrefix() + TextFormat.GREEN + " Successfully set the first position of the PvPArea.");
+    }
+
+    /**
+     * Sets the second position in the area information.
+     */
+    public void setSecondPos()
+    {
+        this.areaInfo.put("secondPos", new Vector3(this.x, this.y, this.z));
+        this.sendMessage(Utils.getPrefix() + TextFormat.GREEN + " Successfully set the second position of the PvPArea.");
+    }
+
+    /**
+     * Gets the player's area information.
+     * @return - The area information.
+     */
+    public HashMap<String, Object> getAreaInfo()
+    {
+        return this.areaInfo;
+    }
+
+    /**
+     * Creates the new area based on the given name.
+     * @param name - The input name.
+     */
+    public void createArea(String name)
+    {
+        if(PvPCore.getAreaHandler().createArea(this.areaInfo, name, this))
+        {
+            this.sendMessage(Utils.getPrefix() + TextFormat.GREEN + " Successfully created a new PvPArea.");
+            this.areaInfo.clear();
+        }
     }
 
     /**

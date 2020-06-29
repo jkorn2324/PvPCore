@@ -41,7 +41,7 @@ class PvPCPlayer extends Player
 
         $this->pvpAreaInfo->firstPos = $this->asVector3();
 
-        $this->sendMessage(TextFormat::GREEN . "Successfully set the first position of the PvPArea.");
+        $this->sendMessage(Utils::getPrefix() . TextFormat::GREEN . " Successfully set the first position of the PvPArea.");
     }
 
     /**
@@ -55,7 +55,7 @@ class PvPCPlayer extends Player
 
         $this->pvpAreaInfo->secondPos = $this->asVector3();
 
-        $this->sendMessage(TextFormat::GREEN . "Successfully set the second position of the PvPArea.");
+        $this->sendMessage(Utils::getPrefix() . TextFormat::GREEN . " Successfully set the second position of the PvPArea.");
     }
 
 
@@ -77,9 +77,8 @@ class PvPCPlayer extends Player
     public function createArea(string $name): void
     {
         if (PvPCore::getAreaHandler()->createArea($this->pvpAreaInfo, $name, $this)) {
-            $this->sendMessage(TextFormat::GREEN . "Successfully created a new PvPArea.");
+            $this->sendMessage(Utils::getPrefix() . TextFormat::GREEN . " Successfully created a new PvPArea.");
             $this->pvpAreaInfo = null;
-            return;
         }
     }
 

@@ -4,7 +4,7 @@ version: 2.0.2
 api: "3.0.0"
 author: jkorn
 website: https://github.com/jkorn2324
-description: A plugin that edits the knockback of the player.
+description: A plugin that edits the knockback taken by players.
 
 permissions:
   pvpcore.permission.edit:

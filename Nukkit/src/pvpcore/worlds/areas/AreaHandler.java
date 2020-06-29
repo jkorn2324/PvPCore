@@ -202,9 +202,9 @@ public class AreaHandler {
      * Gets the areas in the collection.
      * @return - The areas.
      */
-    public Collection<PvPCArea> getAreas()
+    public ArrayList<PvPCArea> getAreas()
     {
-        return this.areas.values();
+        return new ArrayList<>(this.areas.values());
     }
 
     /**

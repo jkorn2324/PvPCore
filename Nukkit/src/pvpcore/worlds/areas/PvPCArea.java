@@ -9,6 +9,7 @@ import pvpcore.utils.PvPCKnockback;
 import pvpcore.utils.Utils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class PvPCArea implements IKnockbackObject {
 
@@ -55,6 +56,7 @@ public class PvPCArea implements IKnockbackObject {
         this.level = Server.getInstance().getLevelByName(level);
         this.firstPosition = firstPosition;
         this.secondPosition = secondPosition;
+        this.knockback = knockback;
         this.enabled = enabled;
     }
 
@@ -66,12 +68,9 @@ public class PvPCArea implements IKnockbackObject {
      */
     public void setPosition(Vector3 position, boolean pos2)
     {
-        if(pos2)
-        {
+        if(pos2) {
             this.secondPosition = position;
-        }
-        else
-        {
+        } else {
             this.firstPosition = position;
         }
     }
@@ -162,7 +161,7 @@ public class PvPCArea implements IKnockbackObject {
         double maxZ = (double) Utils.getMaxValue(this.firstPosition.z, this.secondPosition.z);
 
         return position.x >= minX && position.x <= maxX
-                && position.y >= minY && position.y <= maxX
+                && position.y >= minY && position.y <= maxY
                 && position.z >= minZ && position.z <= maxZ;
     }
 
@@ -205,7 +204,44 @@ public class PvPCArea implements IKnockbackObject {
      */
     public static PvPCArea decode(String name, Object data)
     {
-        // TODO
+        if(
+                data instanceof Map
+                && ((Map) data).containsKey("enabled")
+                && ((Map) data).containsKey("first-pos")
+                && ((Map) data).containsKey("second-pos")
+                && ((Map) data).containsKey("knockback")
+                && ((Map) data).containsKey("level")
+        )
+        {
+            String levelName = String.valueOf(((Map) data).get("level"));
+            if(levelName != null && !Server.getInstance().isLevelLoaded(levelName))
+            {
+                Server.getInstance().loadLevel(levelName);
+            }
+
+            Object enabled = ((Map) data).get("enabled");
+            Vector3 firstPos = Utils.mapToVec3(((Map) data).get("first-pos"));
+            Vector3 secondPos = Utils.mapToVec3(((Map) data).get("second-pos"));
+            PvPCKnockback knockback = PvPCKnockback.decode(((Map) data).get("knockback"));
+
+            if(
+                    enabled instanceof Boolean
+                    && firstPos != null
+                    && secondPos != null
+                    && knockback != null
+            )
+            {
+                return new PvPCArea(
+                        name,
+                        levelName,
+                        firstPos,
+                        secondPos,
+                        knockback,
+                        (Boolean) enabled
+                );
+            }
+        }
+
         return null;
     }
 
@@ -217,7 +253,63 @@ public class PvPCArea implements IKnockbackObject {
      */
     public static PvPCArea decodeLegacy(String name, Object data)
     {
-        // TODO:
+        if(
+                data instanceof Map
+                && ((Map) data).containsKey("knockback-y")
+                && ((Map) data).containsKey("knockback-xz")
+                && ((Map) data).containsKey("first-pos")
+                && ((Map) data).containsKey("second-pos")
+                && ((Map) data).containsKey("attack-delay")
+                && ((Map) data).containsKey("kb-enabled")
+                && ((Map) data).containsKey("world")
+        )
+        {
+            String levelName = (String)((Map) data).get("world");
+            if(levelName != null && !Server.getInstance().isLevelLoaded(levelName))
+            {
+                Server.getInstance().loadLevel(levelName);
+            }
+
+            Number kbY = (Number)((Map) data).get("knockback-y");
+            Number kbXZ = (Number)((Map) data).get("knockback-xz");
+            Vector3 firstPos = stringToVec3(String.valueOf(((Map) data).get("first-pos")));
+            Vector3 secondPos = stringToVec3(String.valueOf(((Map) data).get("second-pos")));
+            Number attackDelay = (Number) ((Map) data).get("attack-delay");
+            boolean enabled = Boolean.parseBoolean(String.valueOf(((Map) data).get("kb-enabled")));
+
+            if(
+                    firstPos != null
+                    && secondPos != null
+            )
+            {
+                return new PvPCArea(
+                        name,
+                        levelName,
+                        firstPos,
+                        secondPos,
+                        new PvPCKnockback(kbY.floatValue(), kbXZ.floatValue(), attackDelay.intValue()),
+                        enabled
+                );
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Converts the input string to a vector 3.
+     * @param input - The input string.
+     * @return Vector3 or null.
+     */
+    private static Vector3 stringToVec3(String input)
+    {
+        String[] exploded = input.split(":");
+        if(exploded.length == 3)
+        {
+            int x = Integer.parseInt(exploded[0]);
+            int y = Integer.parseInt(exploded[1]);
+            int z = Integer.parseInt(exploded[2]);
+            return new Vector3(x, y, z);
+        }
         return null;
     }
 }

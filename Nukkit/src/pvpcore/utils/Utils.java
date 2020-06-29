@@ -18,6 +18,9 @@ import java.util.Map;
  */
 public class Utils {
 
+    // The types of form actions we will be doing.
+    public static final int ACTION_DELETE_AREA = 0, ACTION_EDIT_AREA = 1, ACTION_VIEW_AREA = 2;
+
     /**
      * Gets the maximum value based on a list of values.
      * @param values - The list of number values.
@@ -74,17 +77,18 @@ public class Utils {
      * @param map - The input map.
      * @return - Vector3 or null if failed.
      */
-    public static Vector3 mapToVec3(Map map)
+    public static Vector3 mapToVec3(Object map)
     {
         if(
-                map.containsKey("x")
-                && map.containsKey("y")
-                && map.containsKey("z")
+                map instanceof Map
+                && ((Map) map).containsKey("x")
+                && ((Map) map).containsKey("y")
+                && ((Map) map).containsKey("z")
         )
         {
-            Object x = map.get("x");
-            Object y = map.get("y");
-            Object z = map.get("z");
+            Object x = ((Map) map).get("x");
+            Object y = ((Map) map).get("y");
+            Object z = ((Map) map).get("z");
 
             if(
                     x instanceof Number

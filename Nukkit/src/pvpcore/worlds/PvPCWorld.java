@@ -3,14 +3,11 @@ package pvpcore.worlds;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.level.Level;
-import cn.nukkit.math.Vector3;
-import org.json.simple.JSONObject;
 import pvpcore.utils.IKnockbackObject;
 import pvpcore.utils.PvPCKnockback;
 import pvpcore.utils.Utils;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class PvPCWorld implements IKnockbackObject {
@@ -165,12 +162,12 @@ public class PvPCWorld implements IKnockbackObject {
     {
         if(
                 object instanceof Map
-                && ((JSONObject) object).containsKey("kbEnabled")
-                && ((JSONObject) object).containsKey("kbInfo")
+                && ((Map) object).containsKey("kbEnabled")
+                && ((Map) object).containsKey("kbInfo")
         )
         {
-            PvPCKnockback knockback = PvPCKnockback.decode(((JSONObject) object).get("kbInfo"));
-            Object enabled = ((JSONObject) object).get("kbEnabled");
+            PvPCKnockback knockback = PvPCKnockback.decode(((Map) object).get("kbInfo"));
+            Object enabled = ((Map) object).get("kbEnabled");
 
             if(knockback != null && enabled instanceof Boolean)
             {
@@ -194,10 +191,10 @@ public class PvPCWorld implements IKnockbackObject {
     {
         if(
                 object instanceof Map
-                && ((HashMap) object).containsKey("attack-delay")
-                && ((HashMap) object).containsKey("knockback-xz")
-                && ((HashMap) object).containsKey("knockback-y")
-                && ((HashMap) object).containsKey("customkb")
+                && ((Map) object).containsKey("attack-delay")
+                && ((Map) object).containsKey("knockback-xz")
+                && ((Map) object).containsKey("knockback-y")
+                && ((Map) object).containsKey("customkb")
         )
         {
             Object attackDelay = ((Map) object).get("attack-delay");
