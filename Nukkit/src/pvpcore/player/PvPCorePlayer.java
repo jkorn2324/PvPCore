@@ -2,6 +2,8 @@ package pvpcore.player;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.event.entity.EntityDamageByEntityEvent;
+import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.SourceInterface;
@@ -114,6 +116,37 @@ public class PvPCorePlayer extends Player {
 
             this.setMotion(motion);
         }
+    }
+
+    /**
+     * Called when the PvPCorePlayer is attacked.
+     * @param event - The EntityDamageEvent being called.
+     * @return - True if the player was attacked, false otherwise.
+     */
+    public boolean attack(EntityDamageEvent event)
+    {
+        boolean output = super.attack(event);
+
+        if(
+                output && !event.isCancelled()
+                && event instanceof EntityDamageByEntityEvent
+                && event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)
+        )
+        {
+            int attackTime = event.getAttackCooldown();
+            Entity damager = ((EntityDamageByEntityEvent) event).getDamager();
+            if(damager instanceof Player)
+            {
+                PvPCKnockback knockback = Utils.getKnockbackFor(this, (Player)damager);
+                if(knockback != null)
+                {
+                    attackTime = knockback.getAttackDelay();
+                }
+            }
+            this.attackTime = attackTime;
+        }
+
+        return output;
     }
 
     /**
