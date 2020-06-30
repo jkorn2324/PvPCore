@@ -98,10 +98,12 @@ public class AreaHandler {
             // Decodes the areas data from the JSON file and stores them in the concurrent hashmap.
             Object areasData = parser.parse(reader);
             if (areasData instanceof JSONObject) {
-                Iterator iterator = ((JSONObject) areasData).keySet().iterator();
-                while (iterator.hasNext()) {
-                    String areaName = (String) iterator.next();
-                    Object worldData = ((JSONObject) areasData).get(areaName);
+
+                Set set = ((JSONObject) areasData).keySet();
+                for(Object key : set)
+                {
+                    String areaName = (String)key;
+                    Object worldData = ((JSONObject) areasData).get(key);
                     PvPCArea area = PvPCArea.decode(areaName, worldData);
                     if (area != null) {
                         this.areas.put(area.getName(), area);

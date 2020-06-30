@@ -97,16 +97,16 @@ public class WorldHandler {
             // Reads the JSON file.
             FileReader reader = new FileReader(this.worldsFile);
             JSONParser parser = new JSONParser();
-
             Object worldsData = parser.parse(reader);
+
             if(worldsData instanceof JSONObject)
             {
-                Iterator iterator = ((JSONObject) worldsData).keySet().iterator();
-                while(iterator.hasNext())
+                Set keys = ((JSONObject) worldsData).keySet();
+                for(Object key : keys)
                 {
-                    String worldName = (String)iterator.next();
-                    Object worldData = ((JSONObject) worldsData).get(worldName);
-                    PvPCWorld world = PvPCWorld.decode(worldName, worldData);
+                    String worldName = (String)key;
+                    Object worldInformation = ((JSONObject) worldsData).get(key);
+                    PvPCWorld world = PvPCWorld.decode(worldName, worldInformation);
                     if(world != null)
                     {
                         this.worlds.put(world.getLevelName(), world);
@@ -129,7 +129,9 @@ public class WorldHandler {
         {
             if(!this.worlds.containsKey(((Level) level).getName()))
             {
-                return this.worlds.put(((Level) level).getName(), new PvPCWorld((Level) level));
+                PvPCWorld world = new PvPCWorld((Level) level);
+                this.worlds.put(((Level) level).getName(), world);
+                return world;
             }
 
             PvPCWorld world = this.worlds.get(((Level) level).getName());
@@ -184,8 +186,9 @@ public class WorldHandler {
     public ArrayList<PvPCWorld> getWorlds()
     {
         ArrayList<PvPCWorld> worlds = new ArrayList<>();
-        Map<Integer, Level> levels = this.server.getLevels();
-        for(Level level : levels.values())
+        Collection<Level> levels = this.server.getLevels().values();
+
+        for(Level level : levels)
         {
             PvPCWorld world = this.getWorld(level);
             if(world != null)

@@ -1,10 +1,10 @@
-package pvpcore.forms.types;
+package pvpcore.forms.def.types;
 
 import cn.nukkit.Player;
 import cn.nukkit.form.response.FormResponse;
 import cn.nukkit.form.window.FormWindowCustom;
-import pvpcore.forms.ICallbackForm;
-import pvpcore.forms.IResponseCallback;
+import pvpcore.forms.def.ICallbackForm;
+import pvpcore.forms.def.IResponseCallback;
 
 import java.util.ArrayList;
 
@@ -12,8 +12,15 @@ public class CallbackCustomForm extends FormWindowCustom implements ICallbackFor
 
     /** The callback instance of the form. */
     private IResponseCallback callback;
-    /** The extra data of the form. */
-    private Object extraData;
+
+    /**
+     * The Default callback custom form constructor.
+     */
+    public CallbackCustomForm()
+    {
+        this(null);
+    }
+
 
     /**
      * The Callback custom form constructor.
@@ -23,7 +30,6 @@ public class CallbackCustomForm extends FormWindowCustom implements ICallbackFor
     {
         super("", new ArrayList<>());
         this.callback = callback;
-        this.extraData = null;
     }
 
     /**
@@ -36,7 +42,7 @@ public class CallbackCustomForm extends FormWindowCustom implements ICallbackFor
     {
         if(this.callback != null)
         {
-            this.callback.call(player, response, this.extraData);
+            this.callback.call(player, response, null);
         }
     }
 
@@ -48,14 +54,5 @@ public class CallbackCustomForm extends FormWindowCustom implements ICallbackFor
     public void setCallback(IResponseCallback callable)
     {
         this.callback = callable;
-    }
-
-    /**
-     * Sets the extra data of the form.
-     * @param object - The extra data object.
-     */
-    public void setExtraData(Object object)
-    {
-        this.extraData = object;
     }
 }

@@ -7,7 +7,7 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerCreationEvent;
 import cn.nukkit.event.player.PlayerFormRespondedEvent;
 import cn.nukkit.form.window.FormWindow;
-import pvpcore.forms.ICallbackForm;
+import pvpcore.forms.def.ICallbackForm;
 import pvpcore.player.PvPCorePlayer;
 
 public class PvPCListener implements Listener {

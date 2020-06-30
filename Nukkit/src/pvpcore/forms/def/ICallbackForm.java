@@ -1,4 +1,4 @@
-package pvpcore.forms;
+package pvpcore.forms.def;
 
 import cn.nukkit.Player;
 import cn.nukkit.form.response.FormResponse;

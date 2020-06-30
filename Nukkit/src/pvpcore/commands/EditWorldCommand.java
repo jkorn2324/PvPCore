@@ -8,6 +8,7 @@ import cn.nukkit.utils.TextFormat;
 import pvpcore.PvPCore;
 import pvpcore.forms.PvPCoreForms;
 import pvpcore.utils.Utils;
+import pvpcore.worlds.PvPCWorld;
 
 public class EditWorldCommand extends Command
 {
@@ -39,9 +40,12 @@ public class EditWorldCommand extends Command
             return true;
         }
 
+        PvPCWorld world = PvPCore.getWorldHandler().getWorld(((Player) commandSender).getLevel());
+        System.out.println(world);
+
         FormWindow window = PvPCoreForms.getWorldMenu(
                 (Player)commandSender,
-                PvPCore.getWorldHandler().getWorld(((Player) commandSender).getLevel()),
+                world,
                 false
         );
         ((Player) commandSender).showFormWindow(window);

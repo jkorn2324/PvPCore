@@ -1,21 +1,27 @@
-package pvpcore.forms.types;
+package pvpcore.forms.def.types;
 
 import cn.nukkit.Player;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.element.ElementButtonImageData;
 import cn.nukkit.form.response.FormResponse;
 import cn.nukkit.form.window.FormWindowSimple;
-import pvpcore.forms.ICallbackForm;
-import pvpcore.forms.IResponseCallback;
+import pvpcore.forms.def.ICallbackForm;
+import pvpcore.forms.def.IResponseCallback;
 
 import java.util.ArrayList;
 
 public class CallbackSimpleForm extends FormWindowSimple implements ICallbackForm {
 
-    /** The extraData to the callback form. */
-    private Object extraData;
     /** The callable to run when the response is called. */
     private IResponseCallback callback;
+
+    /**
+     * The default simple form constructor.
+     */
+    public CallbackSimpleForm()
+    {
+        this(null);
+    }
 
     /**
      * The default constructor
@@ -25,7 +31,6 @@ public class CallbackSimpleForm extends FormWindowSimple implements ICallbackFor
     {
         super("", "", new ArrayList<>());
         this.callback = callable;
-        this.extraData = null;
     }
 
     @Override
@@ -33,7 +38,7 @@ public class CallbackSimpleForm extends FormWindowSimple implements ICallbackFor
     {
         if(this.callback != null)
         {
-            this.callback.call(player, response, this.extraData);
+            this.callback.call(player, response, null);
         }
     }
 
@@ -44,15 +49,6 @@ public class CallbackSimpleForm extends FormWindowSimple implements ICallbackFor
     public void setCallback(IResponseCallback callback)
     {
         this.callback = callback;
-    }
-
-    /**
-     * Sets the extra data of the Simple Form.
-     * @param extraData - The extra data.
-     */
-    public void setExtraData(Object extraData)
-    {
-        this.extraData = extraData;
     }
 
     /**
@@ -80,5 +76,6 @@ public class CallbackSimpleForm extends FormWindowSimple implements ICallbackFor
         {
             button.addImage(new ElementButtonImageData(imageType, path));
         }
+        super.addButton(button);
     }
 }

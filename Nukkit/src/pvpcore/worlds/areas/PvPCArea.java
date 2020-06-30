@@ -270,16 +270,19 @@ public class PvPCArea implements IKnockbackObject {
                 Server.getInstance().loadLevel(levelName);
             }
 
-            Number kbY = (Number)((Map) data).get("knockback-y");
-            Number kbXZ = (Number)((Map) data).get("knockback-xz");
+            Object kbY = ((Map) data).get("knockback-y");
+            Object kbXZ = ((Map) data).get("knockback-xz");
             Vector3 firstPos = stringToVec3(String.valueOf(((Map) data).get("first-pos")));
             Vector3 secondPos = stringToVec3(String.valueOf(((Map) data).get("second-pos")));
-            Number attackDelay = (Number) ((Map) data).get("attack-delay");
+            Object attackDelay = ((Map) data).get("attack-delay");
             boolean enabled = Boolean.parseBoolean(String.valueOf(((Map) data).get("kb-enabled")));
 
             if(
                     firstPos != null
                     && secondPos != null
+                    && kbY instanceof Number
+                    && kbXZ instanceof Number
+                    && attackDelay instanceof Number
             )
             {
                 return new PvPCArea(
@@ -287,7 +290,7 @@ public class PvPCArea implements IKnockbackObject {
                         levelName,
                         firstPos,
                         secondPos,
-                        new PvPCKnockback(kbY.floatValue(), kbXZ.floatValue(), attackDelay.intValue()),
+                        new PvPCKnockback(((Number) kbY).floatValue(), ((Number) kbXZ).floatValue(), ((Number) attackDelay).intValue()),
                         enabled
                 );
             }

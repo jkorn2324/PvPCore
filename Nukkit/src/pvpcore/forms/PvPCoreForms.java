@@ -10,8 +10,8 @@ import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.utils.TextFormat;
 import pvpcore.PvPCore;
-import pvpcore.forms.types.CallbackCustomForm;
-import pvpcore.forms.types.CallbackSimpleForm;
+import pvpcore.forms.def.types.CallbackCustomForm;
+import pvpcore.forms.def.types.CallbackSimpleForm;
 import pvpcore.player.PvPCorePlayer;
 import pvpcore.utils.PvPCKnockback;
 import pvpcore.utils.Utils;
@@ -33,6 +33,7 @@ public class PvPCoreForms {
      * @return - The PvPCore menu form.
      */
     public static CallbackSimpleForm getPvPCoreMenu(Player player) {
+
         CallbackSimpleForm form = new CallbackSimpleForm((responsePlayer, response, extraData) -> {
 
             if (response instanceof FormResponseSimple) {
@@ -69,6 +70,7 @@ public class PvPCoreForms {
      * @return - The CallbackSimpleForm.
      */
     public static CallbackSimpleForm getWorldsMenu(Player player) {
+
         CallbackSimpleForm form = new CallbackSimpleForm((responsePlayer, response, extraData) -> {
 
             if (response instanceof FormResponseSimple) {
@@ -107,6 +109,7 @@ public class PvPCoreForms {
      * @return - The areas menu form.
      */
     public static CallbackSimpleForm getAreasMenu(Player player) {
+
         CallbackSimpleForm form = new CallbackSimpleForm((responsePlayer, response, extraData) -> {
 
             if (response instanceof FormResponseSimple) {
@@ -157,10 +160,12 @@ public class PvPCoreForms {
      * @return - The Form Window.
      */
     public static CallbackSimpleForm getWorldSelectorForm(Player player, boolean viewInfo) {
+
         CallbackSimpleForm form = new CallbackSimpleForm((responsePlayer, response, extraData) -> {
 
             if (response instanceof FormResponseSimple) {
-                ArrayList worlds = (ArrayList) ((HashMap) extraData).get("worlds");
+
+                /* ArrayList worlds = (ArrayList) ((HashMap) extraData).get("worlds");
                 if (worlds.size() <= 0) {
                     return;
                 }
@@ -168,7 +173,7 @@ public class PvPCoreForms {
                 boolean dataViewInfo = (boolean) ((HashMap) extraData).get("viewInfo");
                 PvPCWorld world = (PvPCWorld) worlds.get(((FormResponseSimple) response).getClickedButtonId());
                 FormWindow menu = PvPCoreForms.getWorldMenu(responsePlayer, world, dataViewInfo);
-                responsePlayer.showFormWindow(menu);
+                responsePlayer.showFormWindow(menu); */
             }
         });
 
@@ -176,22 +181,20 @@ public class PvPCoreForms {
         form.setContent("Select the world that you want to view/configure the knockback for.");
 
         ArrayList<PvPCWorld> worlds = PvPCore.getWorldHandler().getWorlds();
-
-        HashMap<String, Object> extraData = new HashMap<>();
-        extraData.put("worlds", worlds);
-        extraData.put("view", viewInfo);
-
-        if (worlds.size() <= 0) {
+        if(worlds.size() <= 0) {
             form.addButton("None", ElementButtonImageData.IMAGE_DATA_TYPE_PATH, "textures/ui/redX1.png");
-            form.setExtraData(extraData);
             return form;
         }
 
-        for (PvPCWorld world : worlds) {
-            form.addButton(world.getLevelName(), ElementButtonImageData.IMAGE_DATA_TYPE_PATH, "textures/ui/op.png");
+        for(PvPCWorld world : worlds)
+        {
+            form.addButton(
+                    world.getLevelName(),
+                    ElementButtonImageData.IMAGE_DATA_TYPE_PATH,
+                    "textures/ui/op.png"
+            );
         }
 
-        form.setExtraData(extraData);
         return form;
     }
 
@@ -203,10 +206,11 @@ public class PvPCoreForms {
      * @return - A Callback Simple Form.
      */
     public static CallbackSimpleForm getAreaSelectorMenu(Player player, int type) {
+
         CallbackSimpleForm form = new CallbackSimpleForm((responsePlayer, response, extraData) -> {
 
             if (response instanceof FormResponseSimple) {
-                ArrayList areas = (ArrayList) ((HashMap) extraData).get("areas");
+                /* ArrayList areas = (ArrayList) ((HashMap) extraData).get("areas");
                 if (areas.size() <= 0) {
                     return;
                 }
@@ -227,7 +231,7 @@ public class PvPCoreForms {
 
                 if (window != null) {
                     responsePlayer.showFormWindow(window);
-                }
+                } */
             }
 
         });
@@ -253,14 +257,8 @@ public class PvPCoreForms {
         }
 
         ArrayList<PvPCArea> areas = PvPCore.getAreaHandler().getAreas();
-
-        HashMap<String, Object> extraData = new HashMap<>();
-        extraData.put("areas", areas);
-        extraData.put("type", type);
-
         if (areas.size() <= 0) {
             form.addButton("None", ElementButtonImageData.IMAGE_DATA_TYPE_PATH, "textures/ui/redX1.png");
-            form.setExtraData(extraData);
             return form;
         }
 
@@ -268,7 +266,6 @@ public class PvPCoreForms {
             form.addButton(area.getName(), ElementButtonImageData.IMAGE_DATA_TYPE_PATH, "textures/ui/deop.png");
         }
 
-        form.setExtraData(extraData);
         return form;
     }
 
@@ -281,9 +278,10 @@ public class PvPCoreForms {
      * @return - A Custom Form instance.
      */
     public static CallbackCustomForm getWorldMenu(Player player, PvPCWorld world, boolean view) {
+
         CallbackCustomForm form = new CallbackCustomForm((responsePlayer, response, extraData) -> {
 
-            boolean viewInfo = (boolean) ((HashMap) extraData).get("view");
+            /* boolean viewInfo = (boolean) ((HashMap) extraData).get("view");
             if (viewInfo) {
                 FormWindow window = PvPCoreForms.getWorldSelectorForm(responsePlayer, true);
                 responsePlayer.showFormWindow(window);
@@ -331,7 +329,7 @@ public class PvPCoreForms {
                 }
 
                 responsePlayer.sendMessage(Utils.getPrefix() + TextFormat.GREEN + " The kb has been successfully updated.");
-            }
+            } */
         });
 
         String title = view ? "World Information" : "Edit World Configuration";
@@ -339,11 +337,6 @@ public class PvPCoreForms {
 
         String desc = view ? "Displays the knockback information of the world." : "Edit the knockback configuration of the world.";
         form.addElement(new ElementLabel(desc));
-
-        HashMap<String, Object> extraData = new HashMap<>();
-        extraData.put("view", view);
-        extraData.put("world", world);
-        form.setExtraData(extraData);
 
         if (view) {
             form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "World Name: " + world.getLevelName()));
@@ -375,7 +368,7 @@ public class PvPCoreForms {
 
         CallbackCustomForm form = new CallbackCustomForm((responsePlayer, response, extraData) -> {
 
-            int typeInfo = (int) ((HashMap) extraData).get("type");
+            /* int typeInfo = (int) ((HashMap) extraData).get("type");
             if (typeInfo == Utils.ACTION_VIEW_AREA) {
                 FormWindow window = PvPCoreForms.getWorldSelectorForm(responsePlayer, true);
                 responsePlayer.showFormWindow(window);
@@ -424,7 +417,7 @@ public class PvPCoreForms {
                 }
 
                 responsePlayer.sendMessage(Utils.getPrefix() + TextFormat.GREEN + " The kb has been successfully updated.");
-            }
+            } */
         });
 
         String title = type == Utils.ACTION_VIEW_AREA ? "Area Information" : "Edit Area Configuration";
@@ -432,11 +425,6 @@ public class PvPCoreForms {
 
         String description = type == Utils.ACTION_VIEW_AREA ? "Displays the knockback information of the area." : "Edit the knockback configuration of the area.";
         form.setTitle(description);
-
-        HashMap<String, Object> extraData = new HashMap<>();
-        extraData.put("type", type);
-        extraData.put("area", area);
-        form.setExtraData(extraData);
 
         if(type == Utils.ACTION_VIEW_AREA)
         {
@@ -493,7 +481,7 @@ public class PvPCoreForms {
         });
 
         form.setTitle("Create New Area");
-        form.addElement(new ElementLabel("Provide the name of the area that you want to create: "));
+        form.addElement(new ElementInput("Provide the name of the area that you want to create: "));
         return form;
     }
 
@@ -504,8 +492,8 @@ public class PvPCoreForms {
      * @return - The help custom form.
      */
     public static CallbackCustomForm getPvPAreaHelpForm(Player player) {
-        CallbackCustomForm form = new CallbackCustomForm((responsePlayer, response, extraData) -> {
-        });
+
+        CallbackCustomForm form = new CallbackCustomForm();
 
         form.setTitle("PvPArea Creation Help");
         form.addElement(new ElementLabel("To create a new PvPArea, you must provide the following things:\n"
@@ -559,15 +547,16 @@ public class PvPCoreForms {
      * @return - A new instance of the delete menu form.
      */
     public static CallbackSimpleForm getDeleteMenu(Player player, PvPCArea area) {
+
         CallbackSimpleForm form = new CallbackSimpleForm((responsePlayer, response, extraData) -> {
 
             if (response instanceof FormResponseSimple) {
-                PvPCArea pvpArea = (PvPCArea) extraData;
+
                 int buttonID = ((FormResponseSimple) response).getClickedButtonId();
                 switch (buttonID) {
                     case 0:
-                        PvPCore.getAreaHandler().deleteArea(pvpArea);
-                        responsePlayer.sendMessage(Utils.getPrefix() + TextFormat.RED.toString() + " You have successfully deleted the area.");
+                        /* PvPCore.getAreaHandler().deleteArea(pvpArea);
+                        responsePlayer.sendMessage(Utils.getPrefix() + TextFormat.RED.toString() + " You have successfully deleted the area."); */
                         break;
                     case 1:
                         FormWindow window = PvPCoreForms.getAreaSelectorMenu(responsePlayer, Utils.ACTION_DELETE_AREA);
@@ -584,7 +573,6 @@ public class PvPCoreForms {
         form.addButton("Yes", ElementButtonImageData.IMAGE_DATA_TYPE_PATH, "textures/ui/check.png");
         form.addButton("No", ElementButtonImageData.IMAGE_DATA_TYPE_PATH, "textures/ui/cancel.png");
 
-        form.setExtraData(area);
         return form;
     }
 }

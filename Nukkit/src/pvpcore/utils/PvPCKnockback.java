@@ -3,6 +3,7 @@ package pvpcore.utils;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class PvPCKnockback implements IExportedObject {
 
@@ -109,15 +110,15 @@ public class PvPCKnockback implements IExportedObject {
     public static PvPCKnockback decode(Object object)
     {
         if(
-                object instanceof JSONObject
-                && ((JSONObject) object).containsKey(HORIZONTAL_KB)
-                && ((JSONObject) object).containsKey(VERTICAL_KB)
-                && ((JSONObject) object).containsKey(SPEED_KB)
+                object instanceof Map
+                && ((Map) object).containsKey(HORIZONTAL_KB)
+                && ((Map) object).containsKey(VERTICAL_KB)
+                && ((Map) object).containsKey(SPEED_KB)
         )
         {
-            Object horizontalKB = ((JSONObject) object).get(HORIZONTAL_KB);
-            Object verticalKB = ((JSONObject) object).get(VERTICAL_KB);
-            Object speedKB = ((JSONObject) object).get(SPEED_KB);
+            Object horizontalKB = ((Map) object).get(HORIZONTAL_KB);
+            Object verticalKB = ((Map) object).get(VERTICAL_KB);
+            Object speedKB = ((Map) object).get(SPEED_KB);
 
             // Checks whether or not the PvP Knockback value could be decoded.
             if(
@@ -127,9 +128,9 @@ public class PvPCKnockback implements IExportedObject {
             )
             {
                 return new PvPCKnockback(
-                        ((Double) horizontalKB).floatValue(),
-                        ((Double) verticalKB).floatValue(),
-                        (Integer) speedKB
+                        ((Number) horizontalKB).floatValue(),
+                        ((Number) verticalKB).floatValue(),
+                        ((Number) speedKB).intValue()
                 );
             }
         }
