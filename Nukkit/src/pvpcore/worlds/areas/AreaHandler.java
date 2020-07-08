@@ -227,7 +227,7 @@ public class AreaHandler {
 
         } catch (Exception e)
         {
-            // TODO: Print
+            e.printStackTrace();
         }
     }
 }
