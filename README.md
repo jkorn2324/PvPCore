@@ -24,11 +24,12 @@ This plugin allows you to easily change the knockback the players take in a spec
 	- [x] Attack Delay
 - [x] Knockback affecting a World.
 - [x] Knockback affecting an Area
-- [x] Multi-Version Support
+- [x] PocketMine Support (php)
 	- [x] 1.14.60 Support
 	- [x] 1.16.0 Support
 - [ ] Nukkit Support (Java)
-- [x] PocketMine Support (php)
+	- [x] 1.14.6 Support
+	- [ ] 1.16.0 Support
 
 ## Configuration
 Fortunately, it's now much easier to configure the Knockback as compared to previous versions of KitKB. Instead of using commands, users now utilize the pvpcore **form menu.**
