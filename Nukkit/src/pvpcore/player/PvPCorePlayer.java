@@ -109,9 +109,9 @@ public class PvPCorePlayer extends Player {
             motion.y += yKB;
             motion.z += z * f * xzKB;
 
-            if (motion.y > base)
+            if (motion.y > yKB)
             {
-                motion.y = base;
+                motion.y = yKB;
             }
 
             this.setMotion(motion);
