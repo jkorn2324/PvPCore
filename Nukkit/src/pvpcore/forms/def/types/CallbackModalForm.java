@@ -6,10 +6,14 @@ import cn.nukkit.form.window.FormWindowModal;
 import pvpcore.forms.def.ICallbackForm;
 import pvpcore.forms.def.IResponseCallback;
 
+import java.util.HashMap;
+
 public class CallbackModalForm extends FormWindowModal implements ICallbackForm {
 
     /** The callback callback. */
     private IResponseCallback callback;
+    /** The extra data of the form. */
+    private HashMap<String, Object> extraData;
 
     /**
      * The Callback Modal form constructor.
@@ -19,6 +23,7 @@ public class CallbackModalForm extends FormWindowModal implements ICallbackForm 
     {
         super("", "", "", "");
         this.callback = callback;
+        this.extraData = new HashMap<>();
     }
 
     /**
@@ -31,7 +36,7 @@ public class CallbackModalForm extends FormWindowModal implements ICallbackForm 
     {
         if(this.callback != null)
         {
-            this.callback.call(player, response, null);
+            this.callback.call(player, response, this.extraData);
         }
     }
 
@@ -43,5 +48,16 @@ public class CallbackModalForm extends FormWindowModal implements ICallbackForm 
     public void setCallback(IResponseCallback callable)
     {
         this.callback = callable;
+    }
+
+    /**
+     * Adds an extra value to the map.
+     * @param key - The input key for the extra data.
+     * @param value - The input value for the extra data.
+     */
+    @Override
+    public void addExtraData(String key, Object value)
+    {
+        this.extraData.put(key, value);
     }
 }

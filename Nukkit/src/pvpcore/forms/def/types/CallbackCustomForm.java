@@ -7,11 +7,15 @@ import pvpcore.forms.def.ICallbackForm;
 import pvpcore.forms.def.IResponseCallback;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CallbackCustomForm extends FormWindowCustom implements ICallbackForm {
 
     /** The callback instance of the form. */
     private IResponseCallback callback;
+
+    /** The extra data of the callback form. */
+    private HashMap<String, Object> extraData;
 
     /**
      * The Default callback custom form constructor.
@@ -19,6 +23,7 @@ public class CallbackCustomForm extends FormWindowCustom implements ICallbackFor
     public CallbackCustomForm()
     {
         this(null);
+        this.extraData = new HashMap<>();
     }
 
 
@@ -30,6 +35,7 @@ public class CallbackCustomForm extends FormWindowCustom implements ICallbackFor
     {
         super("", new ArrayList<>());
         this.callback = callback;
+        this.extraData = new HashMap<>();
     }
 
     /**
@@ -42,7 +48,7 @@ public class CallbackCustomForm extends FormWindowCustom implements ICallbackFor
     {
         if(this.callback != null)
         {
-            this.callback.call(player, response, null);
+            this.callback.call(player, response, this.extraData);
         }
     }
 
@@ -54,5 +60,16 @@ public class CallbackCustomForm extends FormWindowCustom implements ICallbackFor
     public void setCallback(IResponseCallback callable)
     {
         this.callback = callable;
+    }
+
+    /**
+     * Adds an extra value to the map.
+     * @param key - The input key for the extra data.
+     * @param value - The input value for the extra data.
+     */
+    @Override
+    public void addExtraData(String key, Object value)
+    {
+        this.extraData.put(key, value);
     }
 }

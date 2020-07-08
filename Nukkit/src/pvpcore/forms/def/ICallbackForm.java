@@ -14,5 +14,7 @@ public interface ICallbackForm {
     void handleResponse(Player player, FormResponse response);
 
     void setCallback(IResponseCallback callable);
+
+    void addExtraData(String key, Object value);
 }
 

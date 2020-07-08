@@ -165,15 +165,25 @@ public class PvPCoreForms {
 
             if (response instanceof FormResponseSimple) {
 
-                /* ArrayList worlds = (ArrayList) ((HashMap) extraData).get("worlds");
-                if (worlds.size() <= 0) {
+                ArrayList worlds = (ArrayList) extraData.get("worlds");
+                if(worlds.size() <= 0)
+                {
                     return;
                 }
 
-                boolean dataViewInfo = (boolean) ((HashMap) extraData).get("viewInfo");
-                PvPCWorld world = (PvPCWorld) worlds.get(((FormResponseSimple) response).getClickedButtonId());
+                PvPCWorld world = PvPCore.getWorldHandler().getWorld(
+                        worlds.get(((FormResponseSimple) response).getClickedButtonId())
+                );
+
+                if(world == null)
+                {
+                    // TODO: Send message.
+                    return;
+                }
+
+                boolean dataViewInfo = (boolean) extraData.get("view");
                 FormWindow menu = PvPCoreForms.getWorldMenu(responsePlayer, world, dataViewInfo);
-                responsePlayer.showFormWindow(menu); */
+                responsePlayer.showFormWindow(menu);
             }
         });
 
@@ -181,8 +191,13 @@ public class PvPCoreForms {
         form.setContent("Select the world that you want to view/configure the knockback for.");
 
         ArrayList<PvPCWorld> worlds = PvPCore.getWorldHandler().getWorlds();
+        ArrayList<String> inputWorlds = new ArrayList<>();
+
+        form.addExtraData("view", viewInfo);
+
         if(worlds.size() <= 0) {
             form.addButton("None", ElementButtonImageData.IMAGE_DATA_TYPE_PATH, "textures/ui/redX1.png");
+            form.addExtraData("worlds", inputWorlds);
             return form;
         }
 
@@ -193,8 +208,10 @@ public class PvPCoreForms {
                     ElementButtonImageData.IMAGE_DATA_TYPE_PATH,
                     "textures/ui/op.png"
             );
+            inputWorlds.add(world.getLevelName());
         }
 
+        form.addExtraData("worlds", inputWorlds);
         return form;
     }
 
@@ -209,17 +226,28 @@ public class PvPCoreForms {
 
         CallbackSimpleForm form = new CallbackSimpleForm((responsePlayer, response, extraData) -> {
 
-            if (response instanceof FormResponseSimple) {
-                /* ArrayList areas = (ArrayList) ((HashMap) extraData).get("areas");
-                if (areas.size() <= 0) {
+            if (response instanceof FormResponseSimple)
+            {
+                ArrayList areas = (ArrayList) extraData.get("areas");
+                if(areas.size() <= 0)
+                {
                     return;
                 }
 
-                PvPCArea area = (PvPCArea) areas.get(((FormResponseSimple) response).getClickedButtonId());
-                int typeValue = (int) ((HashMap) extraData).get("type");
+                String selectedArea = (String) areas.get(((FormResponseSimple) response).getClickedButtonId());
+                PvPCArea area = PvPCore.getAreaHandler().getArea(selectedArea);
+
+                if(area == null)
+                {
+                    // TODO: Send message
+                    return;
+                }
+
+                int typeValue = (int)extraData.get("type");
+
                 FormWindow window = null;
 
-                switch (typeValue) {
+                switch(typeValue) {
                     case Utils.ACTION_EDIT_AREA:
                     case Utils.ACTION_VIEW_AREA:
                         window = PvPCoreForms.getAreaMenu(responsePlayer, area, typeValue);
@@ -231,7 +259,7 @@ public class PvPCoreForms {
 
                 if (window != null) {
                     responsePlayer.showFormWindow(window);
-                } */
+                }
             }
 
         });
@@ -257,15 +285,22 @@ public class PvPCoreForms {
         }
 
         ArrayList<PvPCArea> areas = PvPCore.getAreaHandler().getAreas();
+        ArrayList<String> inputAreas = new ArrayList<>();
+
+        form.addExtraData("type", type);
+
         if (areas.size() <= 0) {
             form.addButton("None", ElementButtonImageData.IMAGE_DATA_TYPE_PATH, "textures/ui/redX1.png");
+            form.addExtraData("areas", inputAreas);
             return form;
         }
 
         for (PvPCArea area : areas) {
             form.addButton(area.getName(), ElementButtonImageData.IMAGE_DATA_TYPE_PATH, "textures/ui/deop.png");
+            inputAreas.add(area.getName());
         }
 
+        form.addExtraData("areas", inputAreas);
         return form;
     }
 
@@ -281,7 +316,7 @@ public class PvPCoreForms {
 
         CallbackCustomForm form = new CallbackCustomForm((responsePlayer, response, extraData) -> {
 
-            /* boolean viewInfo = (boolean) ((HashMap) extraData).get("view");
+            boolean viewInfo = (boolean) (extraData).get("view");
             if (viewInfo) {
                 FormWindow window = PvPCoreForms.getWorldSelectorForm(responsePlayer, true);
                 responsePlayer.showFormWindow(window);
@@ -289,7 +324,14 @@ public class PvPCoreForms {
             }
 
             if (response instanceof FormResponseCustom) {
-                PvPCWorld pvpWorld = (PvPCWorld) ((HashMap) extraData).get("world");
+
+                PvPCWorld pvpWorld = PvPCore.getWorldHandler().getWorld(extraData.get("world"));
+                if(pvpWorld == null)
+                {
+                    // TODO: Send the player a message.
+                    return;
+                }
+
                 PvPCKnockback knockback = pvpWorld.getKnockback();
 
                 int previousSpeed = knockback.getAttackDelay();
@@ -298,27 +340,33 @@ public class PvPCoreForms {
 
                 try {
 
-                    boolean kbEnabled = ((FormResponseCustom) response).getToggleResponse(2);
+                    boolean kbEnabled = (boolean) ((FormResponseCustom) response).getResponse(2);
                     if (previousEnabled != kbEnabled) {
                         pvpWorld.setKBEnabled(kbEnabled);
                     }
 
-                    Float horizontalKB = Float.parseFloat(((FormResponseCustom) response).getInputResponse(3));
+                    Float horizontalKB = Float.parseFloat((String) ((FormResponseCustom) response).getResponse(3));
                     if (!horizontalKB.equals(previousXKB)) {
                         knockback.update(PvPCKnockback.HORIZONTAL_KB, horizontalKB);
                     }
 
-                    Float verticalKB = Float.parseFloat(((FormResponseCustom) response).getInputResponse(4));
+                    Float verticalKB = Float.parseFloat((String) ((FormResponseCustom) response).getResponse(4));
                     if (!verticalKB.equals(previousYKB)) {
                         knockback.update(PvPCKnockback.VERTICAL_KB, verticalKB);
                     }
 
-                    Integer speed = Integer.parseInt(((FormResponseCustom) response).getInputResponse(5));
+                    Integer speed = Integer.parseInt((String) ((FormResponseCustom) response).getResponse(5));
                     if (!speed.equals(previousSpeed)) {
                         knockback.update(PvPCKnockback.SPEED_KB, speed);
                     }
 
                 } catch (Exception e) {
+
+                    // Checks for any unsuspecting errors.
+                    if(!(e instanceof NumberFormatException))
+                    {
+                        e.printStackTrace();
+                    }
 
                     responsePlayer.sendMessage(Utils.getPrefix() + TextFormat.RED + " Failed to update the kb of the world.");
                     pvpWorld.setKBEnabled(previousEnabled);
@@ -329,7 +377,7 @@ public class PvPCoreForms {
                 }
 
                 responsePlayer.sendMessage(Utils.getPrefix() + TextFormat.GREEN + " The kb has been successfully updated.");
-            } */
+            }
         });
 
         String title = view ? "World Information" : "Edit World Configuration";
@@ -338,16 +386,20 @@ public class PvPCoreForms {
         String desc = view ? "Displays the knockback information of the world." : "Edit the knockback configuration of the world.";
         form.addElement(new ElementLabel(desc));
 
+        PvPCKnockback knockback = world.getKnockback();
+
+        form.addExtraData("view", view);
+        form.addExtraData("world", world.getLevelName());
+
         if (view) {
             form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "World Name: " + world.getLevelName()));
             form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Knockback-Enabled: " + world.isKBEnabled()));
-            form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Horizontal (X) Knockback: " + world.getKnockback().getHorizontalKB()));
-            form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Vertical (Y) Knockback: " + world.getKnockback().getVerticalKB()));
-            form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Attack Delay: " + world.getKnockback().getAttackDelay()));
+            form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Horizontal (X) Knockback: " + knockback.getHorizontalKB()));
+            form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Vertical (Y) Knockback: " + knockback.getVerticalKB()));
+            form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Attack Delay: " + knockback.getAttackDelay()));
             return form;
         }
 
-        PvPCKnockback knockback = world.getKnockback();
         form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "World Name: " + world.getLevelName()));
         form.addElement(new ElementToggle(TextFormat.WHITE.toString() + "Knockback-Enabled", world.isKBEnabled()));
         form.addElement(new ElementInput(TextFormat.WHITE + "Horizontal (X) Knockback: ", "Default = 0.4", Float.toString(knockback.getHorizontalKB())));
@@ -368,48 +420,60 @@ public class PvPCoreForms {
 
         CallbackCustomForm form = new CallbackCustomForm((responsePlayer, response, extraData) -> {
 
-            /* int typeInfo = (int) ((HashMap) extraData).get("type");
+            int typeInfo = (int) extraData.get("type");
             if (typeInfo == Utils.ACTION_VIEW_AREA) {
-                FormWindow window = PvPCoreForms.getWorldSelectorForm(responsePlayer, true);
+                FormWindow window = PvPCoreForms.getAreaSelectorMenu(responsePlayer, typeInfo);
                 responsePlayer.showFormWindow(window);
                 return;
             }
 
             if (response instanceof FormResponseCustom) {
 
-                PvPCArea pvpWorld = (PvPCArea) ((HashMap) extraData).get("area");
-                PvPCKnockback knockback = pvpWorld.getKnockback();
+                PvPCArea pvpCArea = PvPCore.getAreaHandler().getArea((String)extraData.get("area"));
+                if(pvpCArea == null)
+                {
+                    // TODO: Send message to the player.
+                    return;
+                }
+
+                PvPCKnockback knockback = pvpCArea.getKnockback();
 
                 int previousSpeed = knockback.getAttackDelay();
                 float previousXKB = knockback.getHorizontalKB(), previousYKB = knockback.getVerticalKB();
-                boolean previousEnabled = pvpWorld.isEnabled();
+                boolean previousEnabled = pvpCArea.isEnabled();
 
                 try {
 
-                    boolean kbEnabled = ((FormResponseCustom) response).getToggleResponse(2);
+                    boolean kbEnabled = (boolean)((FormResponseCustom) response).getResponse(2);
                     if (previousEnabled != kbEnabled) {
-                        pvpWorld.setEnabled(kbEnabled);
+                        pvpCArea.setEnabled(kbEnabled);
                     }
 
-                    Float horizontalKB = Float.parseFloat(((FormResponseCustom) response).getInputResponse(3));
+                    Float horizontalKB = Float.parseFloat((String) ((FormResponseCustom) response).getResponse(3));
                     if (!horizontalKB.equals(previousXKB)) {
                         knockback.update(PvPCKnockback.HORIZONTAL_KB, horizontalKB);
                     }
 
-                    Float verticalKB = Float.parseFloat(((FormResponseCustom) response).getInputResponse(4));
+                    Float verticalKB = Float.parseFloat((String) ((FormResponseCustom) response).getResponse(4));
                     if (!verticalKB.equals(previousYKB)) {
                         knockback.update(PvPCKnockback.VERTICAL_KB, verticalKB);
                     }
 
-                    Integer speed = Integer.parseInt(((FormResponseCustom) response).getInputResponse(5));
+                    Integer speed = Integer.parseInt((String) ((FormResponseCustom) response).getResponse(5));
                     if (!speed.equals(previousSpeed)) {
                         knockback.update(PvPCKnockback.SPEED_KB, speed);
                     }
 
                 } catch (Exception e) {
 
+                    // Checks for any unsuspected errors.
+                    if(!(e instanceof NumberFormatException))
+                    {
+                        e.printStackTrace();
+                    }
+
                     responsePlayer.sendMessage(Utils.getPrefix() + TextFormat.RED + " Failed to update the kb of the area.");
-                    pvpWorld.setEnabled(previousEnabled);
+                    pvpCArea.setEnabled(previousEnabled);
                     knockback.update(PvPCKnockback.SPEED_KB, previousSpeed);
                     knockback.update(PvPCKnockback.HORIZONTAL_KB, previousXKB);
                     knockback.update(PvPCKnockback.VERTICAL_KB, previousYKB);
@@ -417,26 +481,30 @@ public class PvPCoreForms {
                 }
 
                 responsePlayer.sendMessage(Utils.getPrefix() + TextFormat.GREEN + " The kb has been successfully updated.");
-            } */
+            }
         });
 
         String title = type == Utils.ACTION_VIEW_AREA ? "Area Information" : "Edit Area Configuration";
         form.setTitle(title);
 
         String description = type == Utils.ACTION_VIEW_AREA ? "Displays the knockback information of the area." : "Edit the knockback configuration of the area.";
-        form.setTitle(description);
+        form.addElement(new ElementLabel(description));
+
+        PvPCKnockback knockback = area.getKnockback();
+
+        form.addExtraData("type", type);
+        form.addExtraData("area", area.getName());
 
         if(type == Utils.ACTION_VIEW_AREA)
         {
             form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Area Name: " + area.getName()));
             form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Knockback-Enabled: " + area.isEnabled()));
-            form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Horizontal (X) Knockback: " + area.getKnockback().getHorizontalKB()));
-            form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Vertical (Y) Knockback: " + area.getKnockback().getVerticalKB()));
-            form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Attack Delay: " + area.getKnockback().getAttackDelay()));
+            form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Horizontal (X) Knockback: " + knockback.getHorizontalKB()));
+            form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Vertical (Y) Knockback: " + knockback.getVerticalKB()));
+            form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Attack Delay: " + knockback.getAttackDelay()));
             return form;
         }
 
-        PvPCKnockback knockback = area.getKnockback();
         form.addElement(new ElementLabel(TextFormat.WHITE.toString() + "Area Name: " + area.getName()));
         form.addElement(new ElementToggle(TextFormat.WHITE.toString() + "Knockback-Enabled", area.isEnabled()));
         form.addElement(new ElementInput(TextFormat.WHITE + "Horizontal (X) Knockback: ", "Default = 0.4", Float.toString(knockback.getHorizontalKB())));
@@ -552,11 +620,18 @@ public class PvPCoreForms {
 
             if (response instanceof FormResponseSimple) {
 
+                PvPCArea pvpArea = PvPCore.getAreaHandler().getArea((String)extraData.get("area"));
+                if(pvpArea == null)
+                {
+                    // TODO: Send message.
+                    return;
+                }
+
                 int buttonID = ((FormResponseSimple) response).getClickedButtonId();
                 switch (buttonID) {
                     case 0:
-                        /* PvPCore.getAreaHandler().deleteArea(pvpArea);
-                        responsePlayer.sendMessage(Utils.getPrefix() + TextFormat.RED.toString() + " You have successfully deleted the area."); */
+                        PvPCore.getAreaHandler().deleteArea(pvpArea);
+                        responsePlayer.sendMessage(Utils.getPrefix() + TextFormat.RED.toString() + " You have successfully deleted the area.");
                         break;
                     case 1:
                         FormWindow window = PvPCoreForms.getAreaSelectorMenu(responsePlayer, Utils.ACTION_DELETE_AREA);
@@ -572,6 +647,8 @@ public class PvPCoreForms {
 
         form.addButton("Yes", ElementButtonImageData.IMAGE_DATA_TYPE_PATH, "textures/ui/check.png");
         form.addButton("No", ElementButtonImageData.IMAGE_DATA_TYPE_PATH, "textures/ui/cancel.png");
+
+        form.addExtraData("area", area.getName());
 
         return form;
     }
