@@ -144,7 +144,7 @@ public class WorldHandler {
         else if (level instanceof String)
         {
             boolean loaded = true;
-            if(this.server.isLevelLoaded((String)level))
+            if(!this.server.isLevelLoaded((String)level))
             {
                 loaded = this.server.loadLevel((String)level);
             }
